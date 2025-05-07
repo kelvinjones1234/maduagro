@@ -1,5 +1,5 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { priceData } from "../ConstData";
+import { priceData } from "../../ConstData";
 
 // Market Price Trends Component
 export default function MarketTrends() {

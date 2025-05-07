@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-import { activities } from "../ConstData";
+import { activities } from "../../ConstData";
 
 // Recent Activity Component
 export default function RecentActivity() {

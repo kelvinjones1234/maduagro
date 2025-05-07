@@ -2,8 +2,7 @@
 
 import React from "react";
 import "../globals.css";
-import FarmerDashboardNavbar from "./components/FarmerDashboardNavbar";
-import FarmerDashboardProvider from "./context/DashboardContext";
+import DashboardProvider from "./context/DashboardContext";
 
 export default function DashboardLayout({
   children,
@@ -12,9 +11,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div>
-      <FarmerDashboardProvider>
+      <DashboardProvider>
         <main>{children}</main>
-      </FarmerDashboardProvider>
+      </DashboardProvider>
     </div>
   );
 }

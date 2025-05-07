@@ -10,11 +10,11 @@ import {
   Search,
 } from "lucide-react";
 import { products } from "@/app/dashboard/ConstData";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 import { useState } from "react";
 
 export default function InventoryTab() {
-  const { productModal, currentPage, setCurrentPage } = useFarmerDashboard();
+  const { productModal, currentPage, setCurrentPage } = useDashboard();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter products based on search term

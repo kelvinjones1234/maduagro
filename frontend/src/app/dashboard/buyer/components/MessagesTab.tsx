@@ -1,5 +1,5 @@
 import { PlusCircle, Star } from "lucide-react";
-import { productComments, messages } from "../ConstData";
+import { productComments, messages } from "../../ConstData";
 
 // Messages and Communication Tab Component
 export default function MessagesTab() {

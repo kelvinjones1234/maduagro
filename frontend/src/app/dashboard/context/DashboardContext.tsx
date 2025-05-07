@@ -5,7 +5,7 @@ import { ProductType, OrderType } from "../types"; // <- Make sure OrderType exi
 import { products, productComments, orders } from "../ConstData";
 
 // Define the context type
-type FarmerDashboardContextType = {
+type DashboardContextType = {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   showModal: boolean;
@@ -28,11 +28,9 @@ type FarmerDashboardContextType = {
   } | null;
 };
 
-const FarmerDashboard = createContext<FarmerDashboardContextType | undefined>(
-  undefined
-);
+const Dashboard = createContext<DashboardContextType | undefined>(undefined);
 
-const FarmerDashboardProvider = ({ children }: { children: ReactNode }) => {
+const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -73,7 +71,7 @@ const FarmerDashboardProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <FarmerDashboard.Provider
+    <Dashboard.Provider
       value={{
         activeTab,
         setActiveTab,
@@ -93,18 +91,16 @@ const FarmerDashboardProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </FarmerDashboard.Provider>
+    </Dashboard.Provider>
   );
 };
 
-export const useFarmerDashboard = () => {
-  const context = useContext(FarmerDashboard);
+export const useDashboard = () => {
+  const context = useContext(Dashboard);
   if (!context) {
-    throw new Error(
-      "useFarmerDashboard must be used within a FarmerDashboardProvider"
-    );
+    throw new Error("useDashboard must be used within a DashboardProvider");
   }
   return context;
 };
 
-export default FarmerDashboardProvider;
+export default DashboardProvider;

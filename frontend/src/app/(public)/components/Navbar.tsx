@@ -20,10 +20,11 @@ export default function Navbar() {
   };
 
   const solutionsLinks = [
-    { href: "/services/consulting", label: "Consulting" },
-    { href: "/services/automation", label: "Automation" },
-    { href: "/services/analytics", label: "Analytics" },
-    { href: "/services/integration", label: "Integration" },
+    { href: "/services/consulting", label: "Commodity Sourcing" },
+    { href: "/services/automation", label: "Commodity Storage" },
+    { href: "/services/analytics", label: "Commodity Distribution" },
+    { href: "/services/analytics", label: "Market Place" },
+    { href: "/services/integration", label: "Consultation" },
   ];
 
   const navLinks = [
@@ -96,7 +97,7 @@ export default function Navbar() {
 
                 {/* Solutions Dropdown */}
                 {link.hasDropdown && showSolutionsDropdown && (
-                  <div className="absolute top-full left-0 pt-[1rem] w-48 bg-white shadow-lg rounded-md z-50">
+                  <div className="absolute top-full left-0 pt-[1rem] w-50 bg-white shadow-lg rounded-md z-50">
                     {solutionsLinks.map((solutionLink) => (
                       <Link
                         key={solutionLink.href}

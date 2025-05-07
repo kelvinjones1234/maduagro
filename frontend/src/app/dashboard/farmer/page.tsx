@@ -1,18 +1,18 @@
 "use client";
 
 import React from "react";
-import FarmerDashboardProvider from "../context/DashboardContext";
-import DashboardContent from "../components/DashboardContent";
-import FarmerDashboardNavbar from "../components/FarmerDashboardNavbar";
+import DashboardProvider from "../context/DashboardContext";
+import DashboardContent from "../farmer/components/DashboardContent";
+import DashboardNavbar from "../farmer/components/DashboardNavbar";
 
 const page = () => {
   return (
-    <FarmerDashboardProvider>
+    <DashboardProvider>
       <div className="tablet-lg:hidden">
-        <FarmerDashboardNavbar />
+        <DashboardNavbar />
       </div>
       <DashboardContent />
-    </FarmerDashboardProvider>
+    </DashboardProvider>
   );
 };
 

@@ -1,31 +1,30 @@
-import { Search } from "lucide-react";
-import StatsOverview from "../components/StatsOverview";
-import TabNavigation from "../components/TabNavigation";
-import { useFarmerDashboard } from "../context/DashboardContext";
-import InventoryTab from "../components/InventoryTab";
-import OrdersTab from "../components/OrdersTab";
-import MessagesTab from "../components/MessagesTab";
-import ProfileTab from "../components/ProfileTab";
-import MarketTrends from "../components/MarketTrends";
-import RecentActivity from "../components/RecentActivity";
-import Calendar from "../components/Calendar";
-import AddNewProduct from "../components/AddProduct";
-import ViewProduct from "../components/ViewProduct";
-import DashboardSidebar from "../components/DashboardSidebar";
+import StatsOverview from "./StatsOverview";
+import { useDashboard } from "../../context/DashboardContext";
+import InventoryTab from "./InventoryTab";
+import OrdersTab from "./OrdersTab";
+import MessagesTab from "./MessagesTab";
+import ProfileTab from "./ProfileTab";
+import MarketTrends from "./MarketTrends";
+import RecentActivity from "./RecentActivity";
+import Calendar from "./Calendar";
+import AddNewProduct from "./AddProduct";
+import ViewProduct from "./ViewProduct";
+import DashboardSidebar from "./DashboardSidebar";
 import Image from "next/image";
 import { Bell, ChevronDown } from "lucide-react";
 import EditProduct from "./EditProduct";
 import ViewOrder from "./ViewOrder";
+import OfferTab from "./OfferTab";
 
 export default function DashboardContent() {
   const {
+    productModal,
     activeTab,
     showModal,
-    productModal,
     modalType,
     selectedProduct,
     selectedOrder,
-  } = useFarmerDashboard();
+  } = useDashboard();
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-800 overflow-hidden">
@@ -43,7 +42,7 @@ export default function DashboardContent() {
               {/* Welcome message */}
               <div className="relative flex items-center">
                 <div className="items-center text-gray-500 text-[1rem]">
-                  <span>Welcome to your Dashboard</span>
+                  <span>Welcome to your farmers Dashboard</span>
                 </div>
               </div>
 
@@ -94,7 +93,6 @@ export default function DashboardContent() {
               </div>
             </div>
           </header>
-
           <div className="pt-[2rem] laptop-sm:px-10 px-2">
             {/* Stats overview */}
             <div className="mb-8">
@@ -185,6 +183,8 @@ export default function DashboardContent() {
 
                 {/* Messages Tab */}
                 {activeTab === "messages" && <MessagesTab />}
+
+                {activeTab === "offer" && <OfferTab />}
 
                 {/* Payments Tab */}
                 {activeTab === "payments" && (

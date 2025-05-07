@@ -1,7 +1,7 @@
 import { X, Upload } from "lucide-react";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 import { useState, useEffect, useRef } from "react";
-import { ProductType } from "../types";
+import { ProductType } from "../../types";
 
 type ProductForm = Omit<
   ProductType,
@@ -9,7 +9,7 @@ type ProductForm = Omit<
 >;
 
 export default function EditProduct() {
-  const { selectedProduct, setShowModal } = useFarmerDashboard();
+  const { selectedProduct, setShowModal } = useDashboard();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [productForm, setProductForm] = useState<ProductForm>({

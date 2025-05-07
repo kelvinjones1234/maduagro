@@ -179,3 +179,26 @@ export const productComments = [
     date: "Apr 10, 2025",
   },
 ];
+
+
+
+export const productOffers = [
+  {
+    id: 1,
+    name: "Maize",
+    category: "Grains",
+    quantity: "500 kg",
+    price: "₦200/kg",
+    location: "Benue, Nigeria",
+    status: "Available",
+  },
+  {
+    id: 2,
+    name: "Tomatoes",
+    category: "Vegetables",
+    quantity: "200 crates",
+    price: "₦800/crate",
+    location: "Kano, Nigeria",
+    status: "Pending",
+  },
+];

@@ -1,9 +1,9 @@
 import { X } from "lucide-react";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 
 export default function ViewProduct() {
   const { selectedProduct, getProductMetrics, setShowModal } =
-    useFarmerDashboard();
+    useDashboard();
 
   const metrics = getProductMetrics(selectedProduct?.id!);
 

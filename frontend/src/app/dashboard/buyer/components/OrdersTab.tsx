@@ -1,10 +1,10 @@
 import { Search, Filter, Eye, Truck } from "lucide-react";
-import { orders } from "../ConstData";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { orders } from "../../ConstData";
+import { useDashboard } from "../../context/DashboardContext";
 
 // Order Management Tab Component
 export default function OrdersTab() {
-  const { orderModal } = useFarmerDashboard();
+  const { orderModal } = useDashboard();
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 mobile-lg:p-5 tablet-lg:p-6">

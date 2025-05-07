@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 import { Calendar, MapPin, Box, Truck, DollarSign, User } from "lucide-react";
 import { X } from "lucide-react";
 
@@ -11,7 +11,7 @@ type DetailRowProps = {
 };
 
 const ViewOrder = () => {
-  const { selectedOrder, setShowModal } = useFarmerDashboard();
+  const { selectedOrder, setShowModal } = useDashboard();
   const [status, setStatus] = useState(selectedOrder?.status || "");
 
   if (!selectedOrder) {

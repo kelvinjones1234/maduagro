@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import useScreenWidth from "@/app/(public)/hooks/useScreenWidth";
 import DashboardSidebar from "./DashboardSidebar";
 
-export default function FarmerDashboardNavbar() {
+export default function DashboardNavbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const width = useScreenWidth();
 

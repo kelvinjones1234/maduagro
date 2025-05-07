@@ -1,10 +1,10 @@
 import { X, Upload } from "lucide-react";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 import { useState } from "react";
 
 // Add New Product Modal Component
 export default function AddNewProduct() {
-  const { setShowModal } = useFarmerDashboard();
+  const { setShowModal } = useDashboard();
   const [formData, setFormData] = useState({
     name: "",
     category: "",

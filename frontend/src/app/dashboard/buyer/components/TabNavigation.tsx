@@ -1,6 +1,6 @@
 import React from "react";
 import { Package, ShoppingCart, MessageCircle, User } from "lucide-react";
-import { useFarmerDashboard } from "../context/DashboardContext";
+import { useFarmerDashboard } from "../../context/DashboardContext";
 
 const TabNavigation = () => {
   const { activeTab, setActiveTab } = useFarmerDashboard();
