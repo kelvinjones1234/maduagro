@@ -150,7 +150,7 @@ export default function OrdersTab() {
         </table>
       </div>
 
-      <div className="mt-4 mobile-lg:mt-6">
+      {/* <div className="mt-4 mobile-lg:mt-6">
         <h3 className="text-base mobile-sm:text-lg tablet-lg:text-lg font-medium text-gray-900 mb-3 mobile-lg:mb-4">
           Track Orders
         </h3>
@@ -177,7 +177,7 @@ export default function OrdersTab() {
             Enter an order ID to view detailed tracking information
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -118,7 +118,7 @@ const ViewOrder = () => {
           <DetailRow
             icon={DollarSign}
             label="Amount"
-            value={`$${selectedOrder.amount}`}
+            value={`${selectedOrder.amount}`}
             isLast
           />
         </div>
@@ -142,40 +142,6 @@ const ViewOrder = () => {
         <h3 className="text-sm font-medium text-gray-500 mb-2">Products</h3>
         <div className="bg-gray-50 p-4 rounded-lg">
           {selectedOrder.products}
-        </div>
-      </div>
-
-      {/* Status Update */}
-      <div className="mb-6">
-        <h3 className="text-sm font-medium text-gray-500 mb-2">
-          Update Delivery Status
-        </h3>
-        <div className="flex gap-3">
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 text-sm flex-1"
-            disabled={
-              selectedOrder.status === "Cancelled" ||
-              selectedOrder.status === "Delivered"
-            }
-          >
-            {statusOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handleStatusUpdate}
-            disabled={
-              status === selectedOrder.status ||
-              selectedOrder.status === "Cancelled"
-            }
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            Update
-          </button>
         </div>
       </div>
 
@@ -204,6 +170,9 @@ const ViewOrder = () => {
         </button>
         <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           Contact
+        </button>
+        <button className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+          Cancel
         </button>
       </div>
     </div>

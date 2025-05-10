@@ -48,9 +48,9 @@ export default function StatsOverview() {
           <h3 className="text-gray-600 text-xs mobile-sm:text-sm tablet-lg:text-sm font-semibold tracking-tight">
             Total Revenue
           </h3>
-          <div className="bg-gradient-to-br from-gray-500 to-gray-600 p-2 mobile-lg:p-2.5 rounded-full">
+          <div className="bg-gradient-to-br from-gray-500 to-gray-600 p-2 mobile-lg:p-2 rounded-full">
             <div
-              className="h-4 w-4 mobile-lg:h-5 mobile-lg:w-5 mobile-lg:text-[1.5rem] text-white flex items-center justify-center"
+              className="h-2 w-2 mobile-lg:h-5 mobile-lg:w-5 mobile-lg:text-[1.5rem] text-white flex items-center justify-center"
               aria-hidden="true"
             >
               ₦

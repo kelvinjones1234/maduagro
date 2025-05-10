@@ -1,4 +1,3 @@
-import StatsOverview from "./StatsOverview";
 import { useDashboard } from "../../context/DashboardContext";
 import InventoryTab from "./InventoryTab";
 import OrdersTab from "./OrdersTab";
@@ -6,7 +5,6 @@ import MessagesTab from "./MessagesTab";
 import ProfileTab from "./ProfileTab";
 import MarketTrends from "./MarketTrends";
 import RecentActivity from "./RecentActivity";
-import Calendar from "./Calendar";
 import AddNewProduct from "./AddProduct";
 import ViewProduct from "./ViewProduct";
 import DashboardSidebar from "./DashboardSidebar";
@@ -15,6 +13,7 @@ import { Bell, ChevronDown } from "lucide-react";
 import EditProduct from "./EditProduct";
 import ViewOrder from "./ViewOrder";
 import OfferTab from "./OfferTab";
+import DashboardOverview from "./DashboardOverview";
 
 export default function DashboardContent() {
   const {
@@ -42,7 +41,7 @@ export default function DashboardContent() {
               {/* Welcome message */}
               <div className="relative flex items-center">
                 <div className="items-center text-gray-500 text-[1rem]">
-                  <span>Welcome to your farmers Dashboard</span>
+                  <span>Welcome to your buyer Dashboard</span>
                 </div>
               </div>
 
@@ -86,65 +85,21 @@ export default function DashboardContent() {
                     <p className="text-sm font-medium text-gray-800">
                       Edwin Peter
                     </p>
-                    <p className="text-xs text-gray-500">Farmer</p>
+                    <p className="text-xs text-gray-500">Buyer</p>
                   </div>
                   <ChevronDown className="h-4 w-4 ml-2 text-gray-400" />
                 </div>
               </div>
             </div>
           </header>
-          <div className="pt-[2rem] laptop-sm:px-10 px-2">
-            {/* Stats overview */}
-            <div className="mb-8">
-              <StatsOverview />
-            </div>
 
+          <div className="pt-[2rem] laptop-sm:px-10 px-2">
             {/* Main content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main content area */}
-              <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2 border border-gray-100">
+              <div className="p-4 tablet-lg:p-6 lg:col-span-2  bg-white">
                 {/* Dashboard Home Tab */}
-                {activeTab === "dashboard" && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Dashboard Overview
-                      </h2>
-                      <div className="flex space-x-2">
-                        <button className="text-sm text-gray-500 hover:text-green-600 flex items-center">
-                          <span className="mr-1">This Week</span>
-                        </button>
-                        <button className="text-sm text-gray-500 hover:text-green-600 flex items-center">
-                          <span className="mr-1">This Month</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">
-                          Performance Summary
-                        </h3>
-                        <p className="text-gray-600">
-                          Monitor your sales performance, inventory status, and
-                          market trends all in one place.
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">
-                          Quick Actions
-                        </h3>
-                        <div className="flex flex-wrap gap-3">
-                          <button className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                            View Orders
-                          </button>
-                          <button className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                            Market Report
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {activeTab === "dashboard" && <DashboardOverview />}
 
                 {/* Inventory Tab */}
                 {activeTab === "inventory" && (
@@ -223,14 +178,6 @@ export default function DashboardContent() {
                     Recent Activity
                   </h3>
                   <RecentActivity />
-                </div>
-
-                {/* Calendar */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Calendar
-                  </h3>
-                  <Calendar />
                 </div>
               </div>
             </div>

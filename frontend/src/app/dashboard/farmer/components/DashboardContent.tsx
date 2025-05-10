@@ -1,4 +1,3 @@
-import StatsOverview from "./StatsOverview";
 import { useDashboard } from "../../context/DashboardContext";
 import InventoryTab from "./InventoryTab";
 import OrdersTab from "./OrdersTab";
@@ -15,6 +14,7 @@ import { Bell, ChevronDown } from "lucide-react";
 import EditProduct from "./EditProduct";
 import ViewOrder from "./ViewOrder";
 import OfferTab from "./OfferTab";
+import DashboardOverview from "./DashboardOverview";
 
 export default function DashboardContent() {
   const {
@@ -93,17 +93,14 @@ export default function DashboardContent() {
               </div>
             </div>
           </header>
-          <div className="pt-[2rem] laptop-sm:px-10 px-2">
-            {/* Stats overview */}
-            <div className="mb-8">
-              <StatsOverview />
-            </div>
 
+          <div className="pt-[2rem] laptop-sm:px-10 px-2">
             {/* Main content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main content area */}
-              <div className="bg-white rounded-xl shadow-sm p-6 lg:col-span-2 border border-gray-100">
+              <div className="p-4 tablet-lg:p-6 lg:col-span-2  bg-white">
                 {/* Dashboard Home Tab */}
+                {activeTab === "dashboard" && <DashboardOverview />}
                 {activeTab === "dashboard" && (
                   <div className="space-y-6">
                     <div className="flex items-center justify-between mb-6">
