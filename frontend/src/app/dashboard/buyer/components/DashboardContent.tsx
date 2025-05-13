@@ -97,7 +97,7 @@ export default function DashboardContent() {
             {/* Main content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main content area */}
-              <div className="p-4 tablet-lg:p-6 lg:col-span-2  bg-white">
+              <div className="laptop-lg:p-6 tablet-lg:p-4 lg:col-span-2  bg-white">
                 {/* Dashboard Home Tab */}
                 {activeTab === "dashboard" && <DashboardOverview />}
 
@@ -160,25 +160,6 @@ export default function DashboardContent() {
 
                 {/* Profile Tab */}
                 {activeTab === "profile" && <ProfileTab />}
-              </div>
-
-              {/* Sidebar content */}
-              <div className="space-y-8">
-                {/* Market price trends */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Market Trends
-                  </h3>
-                  <MarketTrends />
-                </div>
-
-                {/* Recent activity */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Recent Activity
-                  </h3>
-                  <RecentActivity />
-                </div>
               </div>
             </div>
           </div>

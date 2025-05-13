@@ -133,7 +133,7 @@ export default function DashboardContent() {
                         <div className="flex flex-wrap gap-3">
                           <button
                             onClick={() => productModal("addProduct")}
-                            className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+                             className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
                           >
                             Add Product
                           </button>

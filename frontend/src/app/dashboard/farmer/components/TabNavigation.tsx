@@ -1,9 +1,9 @@
 import React from "react";
 import { Package, ShoppingCart, MessageCircle, User } from "lucide-react";
-import { useFarmerDashboard } from "../../context/DashboardContext";
+import { useDashboard } from "../../context/DashboardContext";
 
 const TabNavigation = () => {
-  const { activeTab, setActiveTab } = useFarmerDashboard();
+  const { activeTab, setActiveTab } = useDashboard();
 
   return (
     <div className="mb-5 mobile-lg:mb-6 border-b border-gray-200">
