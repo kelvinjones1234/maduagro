@@ -1,30 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Search,
   Filter,
   Star,
   ChevronDown,
-  GridIcon,
-  List,
   ShoppingCart,
   Heart,
   SlidersHorizontal,
   X,
-  Check,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
 import Footer from "../components/Footer";
 
 const ProductListingPage = () => {
-  const [viewMode, setViewMode] = useState("grid");
-  const [activeFilters, setActiveFilters] = useState(["Monitoring"]);
+  // State management
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilters, setActiveFilters] = useState([]);
+  const [activePriceRanges, setActivePriceRanges] = useState([]);
+  const [activeRatings, setActiveRatings] = useState([]);
   const [sortBy, setSortBy] = useState("popularity");
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const productsPerPage = 8;
 
   const categories = [
     { name: "Monitoring", count: 15 },
@@ -61,6 +64,8 @@ const ProductListingPage = () => {
         "Mobile alerts",
         "Cloud dashboard",
       ],
+      description:
+        "Monitor food storage conditions with precision and receive real-time alerts to your mobile device.",
     },
     {
       id: 2,
@@ -77,6 +82,8 @@ const ProductListingPage = () => {
         "Long-range wireless",
         "Weather resistant",
       ],
+      description:
+        "Comprehensive sensor array that monitors multiple environmental parameters across your farm.",
     },
     {
       id: 3,
@@ -94,6 +101,8 @@ const ProductListingPage = () => {
         "Humidity optimization",
         "Energy efficient",
       ],
+      description:
+        "Control your farm's climate with precision for optimal growing conditions and energy efficiency.",
     },
     {
       id: 4,
@@ -110,6 +119,8 @@ const ProductListingPage = () => {
         "Nutrient analysis",
         "Solar powered",
       ],
+      description:
+        "Solar-powered monitoring system that tracks soil moisture and nutrients wirelessly across your fields.",
     },
     {
       id: 5,
@@ -127,6 +138,8 @@ const ProductListingPage = () => {
         "Multiple sensor inputs",
         "USB and wireless transfer",
       ],
+      description:
+        "Collect and store farm data with high-capacity storage and multiple sensor input capabilities.",
     },
     {
       id: 6,
@@ -143,6 +156,8 @@ const ProductListingPage = () => {
         "Forecasting algorithms",
         "Farm-wide coverage",
       ],
+      description:
+        "Advanced weather station with forecasting capabilities designed specifically for agricultural applications.",
     },
     {
       id: 7,
@@ -159,6 +174,8 @@ const ProductListingPage = () => {
         "Instant readouts",
         "Mobile compatibility",
       ],
+      description:
+        "Analyze soil pH and nutrient levels with instant readouts and mobile device compatibility.",
     },
     {
       id: 8,
@@ -176,9 +193,213 @@ const ProductListingPage = () => {
         "Schedule automation",
         "Zone-based control",
       ],
+      description:
+        "Conserve water and optimize irrigation with automated scheduling and zone-based controls.",
+    },
+    {
+      id: 9,
+      name: "Greenhouse Monitoring System",
+      category: "Monitoring",
+      price: 279.99,
+      rating: 4.6,
+      reviews: 58,
+      image: "/images/test12.jpg",
+      isNew: false,
+      inStock: true,
+      features: [
+        "24/7 environmental tracking",
+        "Automated alerts",
+        "Historical data analysis",
+      ],
+      description:
+        "Monitor greenhouse conditions around the clock with automated alerts and historical data tracking.",
+    },
+    {
+      id: 10,
+      name: "Field Nutrient Mapper",
+      category: "Data Collection",
+      price: 329.99,
+      rating: 4.4,
+      reviews: 41,
+      image: "/images/test12.jpg",
+      isNew: true,
+      inStock: true,
+      features: [
+        "GPS integration",
+        "Nutrient visualization",
+        "Application planning",
+      ],
+      description:
+        "Map field nutrients with GPS precision to optimize fertilizer application and crop rotation planning.",
+    },
+    {
+      id: 11,
+      name: "Smart Livestock Tracker",
+      category: "Smart Farming",
+      price: 189.99,
+      rating: 4.3,
+      reviews: 37,
+      image: "/images/test12.jpg",
+      isNew: false,
+      inStock: true,
+      features: [
+        "Real-time location",
+        "Health monitoring",
+        "Long battery life",
+      ],
+      description:
+        "Track livestock location and health with long-lasting battery power and real-time monitoring.",
+    },
+    {
+      id: 12,
+      name: "Advanced Moisture Sensor",
+      category: "Sensors",
+      price: 89.99,
+      rating: 4.2,
+      reviews: 94,
+      image: "/images/test12.jpg",
+      isNew: false,
+      inStock: true,
+      features: [
+        "Deep soil penetration",
+        "Multiple depth readings",
+        "Wireless data transmission",
+      ],
+      description:
+        "Measure soil moisture at multiple depths with wireless data transmission for comprehensive monitoring.",
     },
   ];
 
+  // Apply filters and sorting to the products
+  useEffect(() => {
+    let result = [...products];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (product) =>
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filters
+    if (activeFilters.length > 0) {
+      result = result.filter((product) =>
+        activeFilters.includes(product.category)
+      );
+    }
+
+    // Apply price range filters
+    if (activePriceRanges.length > 0) {
+      result = result.filter((product) => {
+        return activePriceRanges.some((range) => {
+          const [min, max] = range.split("-").map(Number);
+          return product.price >= min && product.price <= max;
+        });
+      });
+    }
+
+    // Apply rating filters
+    if (activeRatings.length > 0) {
+      const minRating = Math.min(...activeRatings);
+      result = result.filter((product) => product.rating >= minRating);
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "price-low":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "newest":
+        result.sort((a, b) => (a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1));
+        break;
+      case "rating":
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case "popularity":
+      default:
+        result.sort((a, b) => b.reviews - a.reviews);
+        break;
+    }
+
+    setTotalProducts(result.length);
+
+    // Apply pagination
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const paginatedResult = result.slice(
+      startIndex,
+      startIndex + productsPerPage
+    );
+    setFilteredProducts(paginatedResult);
+  }, [
+    searchQuery,
+    activeFilters,
+    activePriceRanges,
+    activeRatings,
+    sortBy,
+    currentPage,
+  ]);
+
+  // Calculate total pages for pagination
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Toggle category filter
+  const toggleCategoryFilter = (category) => {
+    setCurrentPage(1); // Reset to first page on filter change
+    if (activeFilters.includes(category)) {
+      setActiveFilters(activeFilters.filter((f) => f !== category));
+    } else {
+      setActiveFilters([...activeFilters, category]);
+    }
+  };
+
+  // Toggle price range filter
+  const togglePriceRangeFilter = (range) => {
+    setCurrentPage(1); // Reset to first page on filter change
+    if (activePriceRanges.includes(range)) {
+      setActivePriceRanges(activePriceRanges.filter((r) => r !== range));
+    } else {
+      setActivePriceRanges([...activePriceRanges, range]);
+    }
+  };
+
+  // Toggle rating filter
+  const toggleRatingFilter = (rating) => {
+    setCurrentPage(1); // Reset to first page on filter change
+    if (activeRatings.includes(rating)) {
+      setActiveRatings(activeRatings.filter((r) => r !== rating));
+    } else {
+      setActiveRatings([...activeRatings, rating]);
+    }
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setActiveFilters([]);
+    setActivePriceRanges([]);
+    setActiveRatings([]);
+    setSearchQuery("");
+    setCurrentPage(1);
+  };
+
+  const toggleFilterVisibility = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
+
+  // Render rating stars
   const renderRatingStars = (rating) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating - fullStars >= 0.5;
@@ -205,21 +426,76 @@ const ProductListingPage = () => {
     return stars;
   };
 
-  const toggleFilter = (filter) => {
-    if (activeFilters.includes(filter)) {
-      setActiveFilters(activeFilters.filter((f) => f !== filter));
-    } else {
-      setActiveFilters([...activeFilters, filter]);
+  // Pagination controls
+  const renderPagination = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    // Adjust start page if we're near the end
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    return (
+      <div className="mt-8 flex justify-center">
+        <nav className="flex items-center space-x-1">
+          <button
+            className={`px-2 py-2 rounded-md border border-gray-100 ${
+              currentPage === 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-500 hover:bg-gray-50"
+            }`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+
+          {pages.map((page) => (
+            <button
+              key={page}
+              className={`px-4 py-2 rounded-md ${
+                currentPage === page
+                  ? "bg-amber-500 text-white font-medium"
+                  : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+              }`}
+              onClick={() => handlePageChange(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className={`px-2 py-2 rounded-md border border-gray-200 ${
+              currentPage === totalPages
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-500 hover:bg-gray-50"
+            }`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </nav>
+      </div>
+    );
   };
 
-  const clearFilters = () => {
-    setActiveFilters([]);
-  };
-
-  const toggleFilterVisibility = () => {
-    setIsFilterVisible(!isFilterVisible);
-  };
+  // Calculate the current active filters for display
+  const allActiveFilters = [
+    ...activeFilters,
+    ...activePriceRanges.map((range) => {
+      const rangeObj = priceRanges.find((p) => p.value === range);
+      return rangeObj ? rangeObj.range : range;
+    }),
+    ...activeRatings.map((rating) => `${rating}+ Stars`),
+  ];
 
   return (
     <div className="mx-auto py-8 font-poppins mt-[10rem]">
@@ -240,9 +516,22 @@ const ProductListingPage = () => {
             <input
               type="text"
               placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
               className="w-full pl-10 pr-4 py-2 border border-gray-100 outline-0 rounded-lg focus:ring-1/2 focus:ring-amber-300 focus:border-amber-500 outline-none"
             />
             <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -271,7 +560,9 @@ const ProductListingPage = () => {
                 <Filter className="h-5 w-5 mr-2 text-gray-500" />
                 Filters
               </h2>
-              {activeFilters.length > 0 && (
+              {(activeFilters.length > 0 ||
+                activePriceRanges.length > 0 ||
+                activeRatings.length > 0) && (
                 <button
                   onClick={clearFilters}
                   className="text-sm text-amber-500 hover:text-amber-600"
@@ -282,17 +573,33 @@ const ProductListingPage = () => {
             </div>
 
             {/* Active Filters */}
-            {activeFilters.length > 0 && (
+            {allActiveFilters.length > 0 && (
               <div className="mb-5">
                 <p className="text-sm text-gray-500 mb-2">Active filters:</p>
                 <div className="flex flex-wrap gap-2">
-                  {activeFilters.map((filter) => (
+                  {allActiveFilters.map((filter) => (
                     <span
                       key={filter}
                       className="inline-flex items-center bg-amber-50 text-amber-700 px-2 py-1 rounded-md text-sm"
                     >
                       {filter}
-                      <button onClick={() => toggleFilter(filter)}>
+                      <button
+                        onClick={() => {
+                          // Handle removing the filter based on its type
+                          if (activeFilters.includes(filter)) {
+                            toggleCategoryFilter(filter);
+                          } else if (filter.includes("Stars")) {
+                            const rating = parseInt(filter);
+                            toggleRatingFilter(rating);
+                          } else {
+                            // Must be a price range
+                            const rangeValue = priceRanges.find(
+                              (p) => p.range === filter
+                            )?.value;
+                            if (rangeValue) togglePriceRangeFilter(rangeValue);
+                          }
+                        }}
+                      >
                         <X className="h-3 w-3 ml-1" />
                       </button>
                     </span>
@@ -311,7 +618,7 @@ const ProductListingPage = () => {
                       type="checkbox"
                       id={`category-${category.name}`}
                       checked={activeFilters.includes(category.name)}
-                      onChange={() => toggleFilter(category.name)}
+                      onChange={() => toggleCategoryFilter(category.name)}
                       className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
                     />
                     <label
@@ -337,6 +644,8 @@ const ProductListingPage = () => {
                     <input
                       type="checkbox"
                       id={`price-${range.value}`}
+                      checked={activePriceRanges.includes(range.value)}
+                      onChange={() => togglePriceRangeFilter(range.value)}
                       className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
                     />
                     <label
@@ -359,6 +668,8 @@ const ProductListingPage = () => {
                     <input
                       type="checkbox"
                       id={`rating-${rating}`}
+                      checked={activeRatings.includes(rating)}
+                      onChange={() => toggleRatingFilter(rating)}
                       className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
                     />
                     <label
@@ -407,11 +718,14 @@ const ProductListingPage = () => {
           <div className="bg-white rounded-xl border border-gray-100 p-4 mb-6 flex flex-col tablet-lg:flex-row justify-between items-start tablet-lg:items-center">
             <div className="flex items-center mb-4 tablet-lg:mb-0">
               <SlidersHorizontal className="h-5 w-5 text-gray-500 mr-2" />
-              {/* <span className="text-sm text-gray-700 mr-3">Sort by:</span> */}
-              <div className="relative">
+              <span className="text-sm text-gray-700">Sort by:</span>
+              <div className="relative ml-2">
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={(e) => {
+                    setSortBy(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   className="appearance-none bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-amber-300"
                 >
                   <option value="popularity">Popularity</option>
@@ -425,44 +739,22 @@ const ProductListingPage = () => {
             </div>
 
             <div className="flex items-center space-x-3">
-              {/* <span className="text-sm text-gray-700">View:</span> */}
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-1.5 rounded-md ${
-                  viewMode === "grid"
-                    ? "bg-amber-100 text-amber-600"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-                aria-label="Grid view"
-              >
-                <GridIcon className="h-5 w-5" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-1.5 rounded-md ${
-                  viewMode === "list"
-                    ? "bg-amber-100 text-amber-600"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-                aria-label="List view"
-              >
-                <List className="h-5 w-5" />
-              </button>
-              <span className="text-sm text-gray-500 ml-3">
-                Showing <strong>8</strong> of <strong>36</strong> products
+              <span className="text-sm text-gray-500">
+                Showing <strong>{filteredProducts.length}</strong> of{" "}
+                <strong>{totalProducts}</strong> products
               </span>
             </div>
           </div>
 
           {/* Product Grid */}
-          {viewMode === "grid" ? (
+          {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 tablet-lg:grid-cols-2 laptop-lg:grid-cols-3 desktop-lg:grid-cols-3 gap-6">
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-xl overflow-hidden border border-gray-100 transition group cursor-pointer"
+                  className="bg-white rounded-xl overflow-hidden border border-gray-100 transition group cursor-pointer hover:shadow-md"
                 >
-                  <div className="relative h-80 laptop-lg:h-40 desktop-lg:h-70 wide:h-80">
+                  <div className="relative h-80 laptop-lg:h-40 desktop-lg:h-60 wide:h-80">
                     <Image
                       src={product.image}
                       alt={product.name}
@@ -514,11 +806,23 @@ const ProductListingPage = () => {
                         <p className="font-bold text-gray-900">
                           &#8358;{product.price.toFixed(2)}
                         </p>
+                        {product.originalPrice && (
+                          <p className="text-xs text-gray-500 line-through">
+                            &#8358;{product.originalPrice.toFixed(2)}
+                          </p>
+                        )}
                       </div>
 
-                      <button className="flex items-center justify-center text-sm bg-amber-500 text-white px-3 py-2 rounded-lg hover:bg-amber-600 transition">
+                      <button
+                        className={`flex items-center justify-center text-sm px-3 py-2 rounded-lg transition ${
+                          product.inStock
+                            ? "bg-amber-500 text-white hover:bg-amber-600"
+                            : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        }`}
+                        disabled={!product.inStock}
+                      >
                         <ShoppingCart className="h-4 w-4 mr-1" />
-                        <span>Add</span>
+                        <span>{product.inStock ? "Add" : "Sold Out"}</span>
                       </button>
                     </div>
                   </div>
@@ -526,118 +830,27 @@ const ProductListingPage = () => {
               ))}
             </div>
           ) : (
-            /* List View */
-            <div className="space-y-4">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-xl overflow-hidden transition group cursor-pointer border border-gray-100"
+            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
+              <div className="flex flex-col items-center justify-center py-8">
+                <Search className="h-12 w-12 text-gray-300 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  No products found
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  We couldn't find any products matching your current filters.
+                </p>
+                <button
+                  onClick={clearFilters}
+                  className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
                 >
-                  <div className="flex flex-col tablet-lg:flex-row">
-                    <div className="relative h-56 tablet-lg:h-auto tablet-lg:w-48 flex-shrink-0">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="group-hover:scale-105 transition-transform duration-300"
-                      />
-
-                      {product.isNew && (
-                        <div className="absolute top-3 left-3 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                          NEW
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-4 flex-1 flex flex-col">
-                      <div className="flex items-center mb-1">
-                        <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                          {product.category}
-                        </span>
-                        {!product.inStock && (
-                          <span className="ml-2 text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-full">
-                            Out of Stock
-                          </span>
-                        )}
-                      </div>
-
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">
-                        {product.name}
-                      </h3>
-
-                      <div className="flex items-center mb-3">
-                        <div className="flex">
-                          {renderRatingStars(product.rating)}
-                        </div>
-                        <span className="text-xs text-gray-600 ml-2">
-                          ({product.reviews} reviews)
-                        </span>
-                      </div>
-
-                      <ul className="mb-4 flex-1">
-                        {product.features.map((feature, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-start text-sm text-gray-600 mb-1"
-                          >
-                            <Check className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-
-                      <div className="flex items-center justify-between mt-auto">
-                        <div className="flex gap-2">
-                          <button className="p-2 rounded-lg border border-gray-100 hover:bg-gray-50 transition">
-                            <Heart className="h-5 w-5 text-gray-500" />
-                          </button>
-                          <button
-                            className={`flex items-center justify-center text-sm rounded-lg px-4 py-2 transition ${
-                              product.inStock
-                                ? "bg-amber-500 hover:bg-amber-600 text-white"
-                                : "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            }`}
-                            disabled={!product.inStock}
-                          >
-                            <ShoppingCart className="h-4 w-4 mr-1" />
-                            {product.inStock ? "Add to Cart" : "Out of Stock"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  Clear all filters
+                </button>
+              </div>
             </div>
           )}
 
           {/* Pagination */}
-          <div className="mt-8 flex justify-center">
-            <nav className="flex items-center space-x-1">
-              <button className="px-2 py-2 rounded-md border border-gray-100 bg-white text-gray-500 hover:bg-gray-50">
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-
-              {[1, 2, 3, 4, 5].map((page) => (
-                <button
-                  key={page}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage === page
-                      ? "bg-amber-500 text-white font-medium"
-                      : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </button>
-              ))}
-
-              <button className="px-2 py-2 rounded-md border border-gray-200 bg-white text-gray-500 hover:bg-gray-50">
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </nav>
-          </div>
+          {totalProducts > productsPerPage && renderPagination()}
         </div>
       </div>
       <div className="py-[4rem]">

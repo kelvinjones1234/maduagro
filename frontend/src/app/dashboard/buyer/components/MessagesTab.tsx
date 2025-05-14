@@ -695,11 +695,6 @@ export default function MessagesTab() {
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs tablet-lg:text-sm font-medium text-gray-900 flex items-center">
                       {seller.name}
-                      {seller.verified && (
-                        <span className="ml-1 bg-green-100 text-green-800 text-[10px] tablet-lg:text-xs px-1 tablet-lg:px-1.5 py-0.5 rounded-full">
-                          ✓
-                        </span>
-                      )}
                     </h3>
                     <div className="text-[10px] tablet-lg:text-xs text-amber-600 font-medium flex items-center">
                       ★ {seller.rating}

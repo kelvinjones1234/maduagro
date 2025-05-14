@@ -1,10 +1,30 @@
-import { Search, Filter, Eye, Truck } from "lucide-react";
+import { Search, Filter, Eye } from "lucide-react";
 import { orders } from "../../ConstData";
 import { useDashboard } from "../../context/DashboardContext";
+import { useState } from "react";
 
 // Order Management Tab Component
 export default function OrdersTab() {
   const { orderModal } = useDashboard();
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const itemsPerPage = 10; // Number of orders per page
+
+  // Filter orders based on search query
+  const filteredOrders = orders.filter((order) =>
+    Object.values(order).some((value) =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  // Calculate pagination details
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const indexOfLastOrder = currentPage * itemsPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - itemsPerPage;
+  const currentOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder
+  );
 
   return (
     <div className="bg-white rounded-2xl shadow-sm p-4 mobile-lg:p-5 tablet-lg:p-6">
@@ -19,22 +39,14 @@ export default function OrdersTab() {
               placeholder="Search orders..."
               className="pl-10 pr-4 py-1.5 mobile-lg:py-2 text-xs mobile-sm:text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 w-full mobile-lg:w-64"
               aria-label="Search orders"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search
               className="absolute left-3 top-1/2 transform -translate-y-1/2 h-3 w-3 mobile-lg:h-4 mobile-lg:w-4 text-gray-400"
               aria-hidden="true"
             />
           </div>
-          <button
-            className="text-gray-600 px-3 py-1.5 mobile-lg:py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200 flex items-center text-xs mobile-sm:text-sm"
-            aria-label="Filter orders"
-          >
-            <Filter
-              className="h-3 w-3 mobile-lg:h-4 mobile-lg:w-4 mr-1"
-              aria-hidden="true"
-            />
-            Filter
-          </button>
         </div>
       </div>
 
@@ -81,7 +93,7 @@ export default function OrdersTab() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {orders.map((order) => (
+            {currentOrders.map((order) => (
               <tr
                 key={order.id}
                 className="hover:bg-gray-50 transition-colors duration-150"
@@ -133,15 +145,6 @@ export default function OrdersTab() {
                         aria-hidden="true"
                       />
                     </button>
-                    {/* <button
-                      className="text-green-600 hover:text-green-800 transition-colors duration-200"
-                      aria-label={`Track order ${order.id}`}
-                    >
-                      <Truck
-                        className="h-4 w-4 mobile-lg:h-5 mobile-lg:w-5"
-                        aria-hidden="true"
-                      />
-                    </button> */}
                   </div>
                 </td>
               </tr>
@@ -149,35 +152,158 @@ export default function OrdersTab() {
           </tbody>
         </table>
       </div>
+      {filteredOrders.length === 0 && (
+        <div className="text-center py-4 text-gray-500 text-sm">
+          No orders found matching your search.
+        </div>
+      )}
 
-      <div className="mt-4 mobile-lg:mt-6">
-        <h3 className="text-base mobile-sm:text-lg tablet-lg:text-lg font-medium text-gray-900 mb-3 mobile-lg:mb-4">
-          Track Orders
-        </h3>
-        <div className="bg-gray-50 p-3 mobile-lg:p-4 rounded-lg">
-          <div className="flex flex-col tablet-lg:flex-row tablet-lg:items-center mb-3 mobile-lg:mb-4">
-            <div className="w-full tablet-lg:w-2/3 mb-3 tablet-lg:mb-0 tablet-lg:mr-4">
-              <input
-                type="text"
-                placeholder="Enter Order ID (e.g. ORD-4591)"
-                className="w-full p-2 mobile-lg:p-2.5 text-xs mobile-sm:text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                aria-label="Enter order ID to track"
-              />
+      {filteredOrders.length > 0 && (
+        <div className="mt-6 flex items-center justify-center">
+          <div className="tablet-lg:flex-1 tablet-lg:flex tablet-lg:items-center tablet-lg:justify-between">
+            <div>
+              <p className="text-sm text-gray-700 text-center">
+                Showing{" "}
+                <span className="font-medium">{indexOfFirstOrder + 1}</span> to{" "}
+                <span className="font-medium">
+                  {Math.min(indexOfLastOrder, filteredOrders.length)}
+                </span>{" "}
+                of <span className="font-medium">{filteredOrders.length}</span>{" "}
+                results
+              </p>
             </div>
-            <div className="w-full tablet-lg:w-1/3">
-              <button
-                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium py-2 mobile-lg:py-2.5 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
-                aria-label="Track order"
+            <div>
+              <nav
+                className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                aria-label="Pagination"
               >
-                Track Order
-              </button>
+                <button
+                  onClick={() => setCurrentPage(1)}
+                  disabled={currentPage === 1}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${
+                    currentPage === 1
+                      ? "cursor-not-allowed"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="sr-only">First Page</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 ${
+                    currentPage === 1
+                      ? "cursor-not-allowed"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="sr-only">Previous</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+
+                {/* Page numbers */}
+                {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                        currentPage === pageNum
+                          ? "z-10 bg-green-50 border-green-500 text-green-600"
+                          : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+
+                <button
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className={`relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 ${
+                    currentPage === totalPages
+                      ? "cursor-not-allowed"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrentPage(totalPages)}
+                  disabled={currentPage === totalPages}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 ${
+                    currentPage === totalPages
+                      ? "cursor-not-allowed"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="sr-only">Last Page</span>
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10 4.293 14.293a1 1 0 000 1.414zm6 0a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L14.586 10l-4.293 4.293a1 1 0 000 1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </nav>
             </div>
-          </div>
-          <div className="text-[0.65rem] mobile-sm:text-xs text-gray-500">
-            Enter an order ID to view detailed tracking information
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

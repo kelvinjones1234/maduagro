@@ -221,12 +221,12 @@ const DetailHero = () => {
           </div>
 
           {/* Short Description */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h3 className="text-lg font-semibold mb-2">Product Description</h3>
             <p className="text-gray-600 leading-relaxed">
               {product.description}
             </p>
-          </div>
+          </div> */}
 
           {/* Key Features */}
           <div className="mb-8">

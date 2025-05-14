@@ -1,16 +1,10 @@
 import { useDashboard } from "../../context/DashboardContext";
-import InventoryTab from "./InventoryTab";
 import OrdersTab from "./OrdersTab";
 import MessagesTab from "./MessagesTab";
 import ProfileTab from "./ProfileTab";
-import MarketTrends from "./MarketTrends";
-import RecentActivity from "./RecentActivity";
-import AddNewProduct from "./AddProduct";
-import ViewProduct from "./ViewProduct";
 import DashboardSidebar from "./DashboardSidebar";
 import Image from "next/image";
 import { Bell, ChevronDown } from "lucide-react";
-import EditProduct from "./EditProduct";
 import ViewOrder from "./ViewOrder";
 import OfferTab from "./OfferTab";
 import DashboardOverview from "./DashboardOverview";
@@ -100,25 +94,6 @@ export default function DashboardContent() {
               <div className="laptop-lg:p-6 tablet-lg:p-4 lg:col-span-2  bg-white">
                 {/* Dashboard Home Tab */}
                 {activeTab === "dashboard" && <DashboardOverview />}
-
-                {/* Inventory Tab */}
-                {activeTab === "inventory" && (
-                  <>
-                    {showModal && modalType === "addProduct" ? (
-                      <AddNewProduct />
-                    ) : showModal &&
-                      modalType === "viewProduct" &&
-                      selectedProduct ? (
-                      <ViewProduct />
-                    ) : showModal &&
-                      modalType === "editProduct" &&
-                      selectedProduct ? (
-                      <EditProduct />
-                    ) : (
-                      <InventoryTab />
-                    )}
-                  </>
-                )}
 
                 {activeTab === "orders" && (
                   <>
