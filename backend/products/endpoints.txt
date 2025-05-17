@@ -1,0 +1,10 @@
+/api/products?page=1&category=monitoring&price_min=100&price_max=300&rating=4
+
+
+filters
+
+category
+minimum_price
+maximum_price
+page_number
+rating

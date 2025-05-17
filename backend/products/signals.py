@@ -11,14 +11,15 @@ def update_product_count(category):
 
 @receiver(post_save, sender=Product)
 def update_product_count_on_save(sender, instance, **kwargs):
-    if instance.category:
-        update_product_count(instance.category)
+    if instance.product_category:
+        update_product_count(instance.product_category)
 
 
 @receiver(post_delete, sender=Product)
 def update_product_count_on_delete(sender, instance, **kwargs):
-    if instance.category:
-        update_product_count(instance.category)
+    if instance.product_category:
+        update_product_count(instance.product_category)
+
 
 
 @receiver(post_save, sender=Rating)

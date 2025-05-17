@@ -37,6 +37,7 @@ class Product(models.Model):
         related_name="products",
         db_index=True,
     )
+    product_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     product_description = models.TextField()
     key_information = models.TextField(max_length=5000, blank=True)
     average_rating = models.FloatField(default=0.0, editable=False)  # Denormalized
@@ -44,7 +45,9 @@ class Product(models.Model):
         default=0, editable=False
     )  # Denormalized
     created_at = models.DateTimeField(auto_now_add=True)
+    available = models.BooleanField(default=False)
     updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to="", null=True, blank=True)
 
     def __str__(self):
         return self.product_name
