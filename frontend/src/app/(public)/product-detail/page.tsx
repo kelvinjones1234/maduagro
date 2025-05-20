@@ -5,8 +5,6 @@ import Image from "next/image";
 import {
   Star,
   MessageCircle,
-  Check,
-  Shield,
   Users,
   MapPin,
   Calendar,
@@ -40,7 +38,7 @@ const TabButton = ({ name, active, onClick, count }) => (
       active
         ? "border-emerald-500 text-emerald-600"
         : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-    } py-4 px-1 border-b-2 font-semibold text-sm capitalize transition`}
+    } py-4 px-1 border-b-2 font-semibold  capitalize transition`}
     aria-selected={active}
     role="tab"
   >
@@ -50,9 +48,7 @@ const TabButton = ({ name, active, onClick, count }) => (
 
 const SellerCard = ({ seller }) => (
   <div className="bg-white rounded-xl border border-gray-200 p-4 sticky top-24">
-    <h2 className="text-xl font-semibold text-gray-900 mb-4">
-      Seller Information
-    </h2>
+    <h2 className="font-semibold text-gray-900 mb-4">Seller Information</h2>
     <div className="flex items-center mb-4">
       <Image
         src="/images/test5.png"
@@ -73,13 +69,13 @@ const SellerCard = ({ seller }) => (
         </div>
         <div className="flex items-center mt-1">
           <RatingStars rating={seller.rating} />
-          <span className="ml-2 text-sm text-gray-600">
+          <span className="ml-2  text-gray-600">
             {seller.rating} ({seller.reviews} reviews)
           </span>
         </div>
       </div>
     </div>
-    <div className="space-y-3 text-sm text-gray-600">
+    <div className="space-y-3  text-gray-600">
       <div className="flex items-center">
         <MapPin className="h-5 w-5 mr-2" aria-hidden="true" />
         <span>{seller.location}</span>
@@ -100,12 +96,12 @@ const SellerCard = ({ seller }) => (
     <p className="mt-4 text-gray-600">{seller.bio}</p>
     {seller.certifications.length > 0 && (
       <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-900">Certifications</h4>
+        <h4 className=" font-semibold text-gray-900">Certifications</h4>
         <div className="flex flex-wrap gap-2 mt-2">
           {seller.certifications.map((cert, index) => (
             <span
               key={index}
-              className="bg-emerald-100 text-emerald-700 text-xs font-medium px-2 py-1 rounded"
+              className="bg-emerald-100 text-emerald-700 font-medium px-2 py-1 rounded"
             >
               {cert}
             </span>
@@ -120,12 +116,6 @@ const SellerCard = ({ seller }) => (
       >
         Chat seller
       </button>
-      {/* <button
-        className="w-full border border-emerald-500 text-emerald-500 hover:bg-emerald-50 font-semibold py-2 px-4 rounded-lg transition"
-        aria-label="View Seller Profile"
-      >
-        View Seller Profile
-      </button> */}
     </div>
   </div>
 );
@@ -201,7 +191,7 @@ export default function ProductDetail() {
   const TabContent = {
     description: (
       <div>
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+        <h2 className=" font-semibold text-gray-900 mb-4">
           Product Description
         </h2>
         <p className="text-gray-600 leading-relaxed">{product.description}</p>
@@ -209,9 +199,7 @@ export default function ProductDetail() {
     ),
     reviews: (
       <div className="px-2">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-          Customer Reviews
-        </h2>
+        <h2 className=" font-semibold text-gray-900 mb-4">Customer Reviews</h2>
         <div className="bg-gray-50 rounded-xl mb-6">
           <div className="flex items-center gap-6">
             <div className="text-4xl font-bold text-gray-900">
@@ -221,7 +209,7 @@ export default function ProductDetail() {
               <div className="flex mb-2">
                 <RatingStars rating={product.rating} />
               </div>
-              <p className="text-sm text-gray-600">
+              <p className=" text-gray-600">
                 Based on {product.reviews} reviews
               </p>
             </div>
@@ -240,7 +228,7 @@ export default function ProductDetail() {
                     className="rounded-full"
                   />
                   <div className="ml-4">
-                    <h3 className="text-sm font-semibold text-gray-900">
+                    <h3 className=" font-semibold text-gray-900">
                       {comment.user}
                     </h3>
                     <div className="flex items-center mt-1">
@@ -248,13 +236,13 @@ export default function ProductDetail() {
                     </div>
                   </div>
                 </div>
-                <span className="text-sm text-gray-600">{comment.date}</span>
+                <span className=" text-gray-600">{comment.date}</span>
               </div>
               <p className="mt-3 text-gray-600 leading-relaxed">
                 {comment.content}
               </p>
               <button
-                className="mt-3 flex items-center text-sm text-gray-600 hover:text-gray-800 transition"
+                className="mt-3 flex items-center  text-gray-600 hover:text-gray-800 transition"
                 aria-label={`Reply to ${comment.user}`}
               >
                 <MessageCircle className="h-4 w-4 mr-1" aria-hidden="true" />
@@ -270,11 +258,11 @@ export default function ProductDetail() {
           Load More Reviews
         </button>
       </div>
-    ), 
+    ),
   };
 
   return (
-    <main className="mx-auto font-sans mt-[10rem] text-[#2D2D2D]">
+    <main className="mx-auto font-sans mt-[10rem] text-[#2D2D2D] mt-[7rem] text-[clamp(.8rem,1.4vw,.9rem)]">
       {/* Product Hero Section */}
       <DetailHero />
 
@@ -282,19 +270,14 @@ export default function ProductDetail() {
         {/* Left Column: Product Details */}
         <div className="laptop-lg:col-span-1">
           {/* Product Title and Basic Info */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {product.name}
-          </h1>
+          <h1 className="font-bold text-gray-900 mb-4">{product.name}</h1>
           <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center">
               <RatingStars rating={product.rating} />
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2  text-gray-600">
                 {product.rating} ({product.reviews} reviews)
               </span>
             </div>
-            {/* <span className="text-lg font-semibold text-emerald-600">
-              &#8358;{product.price.toFixed(2)}
-            </span> */}
           </div>
 
           {/* Tab Navigation */}

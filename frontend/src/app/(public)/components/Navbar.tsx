@@ -4,20 +4,22 @@ import Link from "next/link";
 import { Menu, X, ChevronDown, ShoppingCart, User } from "lucide-react";
 import useScreenWidth from "@/app/(public)/hooks/useScreenWidth";
 import CartDrawer from "./Cart";
+import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [openCart, setOpenCart] = useState(false);
   const [showSolutionsDropdown, setShowSolutionsDropdown] = useState(false);
+
+  const {
+    cart,
+    toggleMenu,
+    toggleCart,
+    setIsOpen,
+    setOpenCart,
+    openCart,
+    isOpen,
+  } = useCart();
+
   const width = useScreenWidth();
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const toggleCart = () => {
-    setOpenCart(!openCart);
-  };
 
   const solutionsLinks = [
     { href: "/services/consulting", label: "Commodity Sourcing" },
@@ -120,17 +122,26 @@ export default function Navbar() {
                 className="hover:text-[#f3af00] transition-colors cursor-pointer"
               />
             </Link>
-            <button onClick={toggleCart} className="z-30">
+            {/* {console.log(cart)} */}
+            <button onClick={toggleCart} className="relative z-30">
+              {/* Icon toggle */}
               {openCart ? (
                 <X
                   size={24}
                   className="hover:text-[#f3af00] transition-colors cursor-pointer"
                 />
               ) : (
-                <ShoppingCart
-                  size={24}
-                  className="hover:text-[#f3af00] transition-colors cursor-pointer"
-                />
+                <div className="relative">
+                  <ShoppingCart
+                    size={24}
+                    className="hover:text-[#f3af00] transition-colors cursor-pointer"
+                  />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-2 bg-red-600 text-white text-[0.6rem] px-[7.5px] py-[2px]  rounded-full font-semibold">
+                      {cart.length}
+                    </span>
+                  )}
+                </div>
               )}
             </button>
           </div>

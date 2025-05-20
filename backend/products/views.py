@@ -2,17 +2,24 @@ from rest_framework import viewsets, permissions
 from .models import Product, ProductCategory
 from .serializers import ProductSerializer, ProductCategorySerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import viewsets, filters
 
 
 class ProductPagination(PageNumberPagination):
-    page_size = 30
+    page_size = 10
     page_size_query_param = "page_size"
-    max_page_size = 100
+    max_page_size = 30
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "product_name",
+        "product_category__category_name",
+        # "seller_profile__nickname",
+    ]
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -38,9 +45,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Sorting
         sort_by = self.request.query_params.get("sort_by", "created_at")
         if sort_by == "popularity":
-            queryset = queryset.order_by(
-                "-popularity_score"
-            )  # Assumes a popularity_score field
+            queryset = queryset.order_by("-popularity_score")
         elif sort_by == "price-low":
             queryset = queryset.order_by("product_price")
         elif sort_by == "price-high":
@@ -50,7 +55,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         elif sort_by == "rating":
             queryset = queryset.order_by("-average_rating")
         else:
-            queryset = queryset.order_by("-created_at")  # Default sorting
+            queryset = queryset.order_by("-created_at")
 
         return queryset
 

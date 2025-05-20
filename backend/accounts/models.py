@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email" 
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     def __str__(self):
@@ -87,6 +87,7 @@ class RegularSellerProfile(models.Model):
         User, on_delete=models.CASCADE, related_name="regular_seller_profile"
     )
     full_name = models.CharField(max_length=100)
+    nickname = models.CharField(max_length=25, unique=True, null=True)
     phone = models.CharField(max_length=20)
     profile_picture = models.ImageField(
         upload_to="regular_sellers/", null=True, blank=True

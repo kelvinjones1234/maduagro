@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Product, ProductCategory
+from accounts.serializers import RegularSellerProfile
 
 
 class ProductCategorySerializer(serializers.ModelSerializer):
@@ -19,14 +20,15 @@ class ProductCategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     average_rating = serializers.FloatField(read_only=True)
     rating_count = serializers.IntegerField(read_only=True)
-    # seller = serializers.HiddenField(default=serializers.CurrentUserDefault())
     product_category = ProductCategorySerializer(read_only=True)
+    seller_profile = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = [
             "id",
             "seller",
+            "seller_profile",  # ✅ Include profile
             "product_name",
             "product_category",
             "product_description",
@@ -37,6 +39,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "product_price",
             "created_at",
             "updated_at",
-            "image",
+            "image", 
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
+
+    def get_seller_profile(self, obj):
+        try:
+            from accounts.serializers import RegularSellerProfileSerializer
+
+            return RegularSellerProfileSerializer(
+                obj.seller.regular_seller_profile
+            ).data
+        except RegularSellerProfile.DoesNotExist:
+            return None

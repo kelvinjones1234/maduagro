@@ -159,21 +159,12 @@ const DetailHero = () => {
         {/* Product Info */}
         <div className="laptop-lg:w-1/2 laptop-lg:pt-0 pt-6">
           <div className="flex flex-wrap items-center gap-3 mb-3">
-            <span className="inline-block text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+            <span className="inline-block font-medium text-emerald-600 py-1">
               {product.category}
             </span>
-            {product.available ? (
-              <span className="inline-block text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                In Stock
-              </span>
-            ) : (
-              <span className="inline-block text-sm font-medium text-red-600 bg-red-50 px-3 py-1 rounded-full">
-                Out of Stock
-              </span>
-            )}
           </div>
 
-          <h1 className="text-3xl font-bold mb-3 text-gray-900">
+          <h1 className=" font-bold mb-3 text-gray-900 text-[1.3rem]">
             {product.name}
           </h1>
 
@@ -181,32 +172,25 @@ const DetailHero = () => {
           <div className="flex flex-wrap items-center gap-6 mb-5">
             <div className="flex items-center">
               <div className="flex">{renderRatingStars(product.rating)}</div>
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2 text-gray-600">
                 <span className="font-medium">{product.rating}</span> (
                 {product.reviews} reviews)
               </span>
             </div>
             <div className="flex items-center text-gray-500">
               <Eye className="h-4 w-4 mr-1" />
-              <span className="text-sm">
-                {product.views.toLocaleString()} views
-              </span>
+              <span className="">{product.views.toLocaleString()} views</span>
             </div>
           </div>
 
           {/* Price */}
           <div className="mb-6 border-b border-gray-100 pb-6">
             <div className="flex items-end gap-2">
-              <p className="text-3xl font-bold text-gray-900">
+              <p className=" font-bold text-gray-900 text-[clamp(.8rem,1.2vw,1rem)]">
                 &#8358;{product.price.toFixed(2)}
               </p>
-              {/* {product.discountPercent > 0 && (
-                <p className="text-lg text-gray-500 line-through mb-0.5">
-                  &#8358;{product.originalPrice.toFixed(2)}
-                </p>
-              )} */}
             </div>
-            <p className="text-sm text-emerald-600 mt-2 flex items-center">
+            <p className="text-emerald-600 mt-2 flex items-center">
               <svg
                 className="w-4 h-4 mr-1"
                 fill="currentColor"
@@ -220,16 +204,8 @@ const DetailHero = () => {
             </p>
           </div>
 
-          {/* Short Description */}
-          {/* <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-2">Product Description</h3>
-            <p className="text-gray-600 leading-relaxed">
-              {product.description}
-            </p>
-          </div> */}
-
           {/* Key Features */}
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <h3 className="text-lg font-semibold mb-2">Key Informations</h3>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
               {product.features.slice(0, 4).map((feature, index) => (
@@ -252,41 +228,30 @@ const DetailHero = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Quantity Selector */}
           <div className="mb-8">
             <label
               htmlFor="quantity"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block font-medium text-gray-700 mb-2"
             >
               Quantity
             </label>
-            <div className="flex items-center border border-gray-100 rounded-lg w-fit">
+
+            <div className="inline-flex items-center border space-x-2 mt-2 text-[.8rem]">
               <button
-                aria-label="Decrease quantity"
-                className="p-2 hover:bg-gray-100 rounded-l-lg transition"
                 onClick={decreaseQuantity}
+                className="px-2 bg-gray-50 hover:bg-gray-100 cursor-pointer transition-all duration-200"
               >
-                <Minus className="h-4 w-4" />
+                -
               </button>
-              <input
-                type="number"
-                id="quantity"
-                name="quantity"
-                min="1"
-                value={quantity}
-                onChange={(e) =>
-                  setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                }
-                className="w-16 text-center border-none focus:ring-0"
-              />
+              <span>{quantity}</span>
               <button
-                aria-label="Increase quantity"
-                className="p-2 hover:bg-gray-100 rounded-r-lg transition"
                 onClick={increaseQuantity}
+                className="px-2 bg-gray-50 hover:bg-gray-100 cursor-pointer transition-all duration-200"
               >
-                <Plus className="h-4 w-4" />
+                +
               </button>
             </div>
           </div>
@@ -321,20 +286,6 @@ const DetailHero = () => {
             >
               <Share2 className="h-6 w-6" />
             </button>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {["IoT", "Smart Agriculture", "Food Storage", "Monitoring"].map(
-              (tag) => (
-                <span
-                  key={tag}
-                  className="text-xs font-medium bg-gray-100 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-200 transition cursor-pointer"
-                >
-                  {tag}
-                </span>
-              )
-            )}
           </div>
         </div>
       </div>
