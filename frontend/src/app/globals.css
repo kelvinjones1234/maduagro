@@ -14,7 +14,7 @@ body {
     --breakpoint-tablet-lg: 48rem;        /* 768px */
     --breakpoint-laptop-sm: 56.25rem;     /* 900px */
     --breakpoint-laptop-lg: 64rem;        /* 1024px */
-    --breakpoint-desktop-sm: 70rem;       /* 1120px */
+    --breakpoint-desktop-sm: 70rem;       /* 1120px */ 
     --breakpoint-desktop-lg: 75rem;       /* 1200px */
     --breakpoint-wide: 93.75rem;        /* 1500px */
     --font-poppins: Poppins, sans-serif;

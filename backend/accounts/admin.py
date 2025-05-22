@@ -12,6 +12,8 @@ from .models import (
 class UserAdmin(BaseUserAdmin):
     model = User
     list_display = (
+        "first_name",
+        "last_name",
         "email",
         "is_staff",
         "is_active",
@@ -68,26 +70,26 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(WholeSellerProfile)
 class WholeSellerProfileAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "business_name", "user", "phone", "is_verified")
-    search_fields = ("full_name", "business_name", "user__email")
+    list_display = ("business_name", "user", "phone", "is_verified")
+    search_fields = ("business_name", "user__email")
 
 
 @admin.register(BulkBuyerProfile)
 class BulkBuyerProfileAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "user", "city", "state", "country")
-    search_fields = ("full_name", "user__email", "city", "state")
+    list_display = ("user", "city", "state", "country")
+    search_fields = ("user__email", "city", "state")
 
 
 @admin.register(RegularSellerProfile)
 class RegularSellerProfileAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "user", "phone", "is_verified")
-    search_fields = ("full_name", "user__email")
+    list_display = ("user", "phone", "is_verified")
+    search_fields = ("user__email",)
 
 
 @admin.register(RegularBuyerProfile)
 class RegularBuyerProfileAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "user", "phone")
-    search_fields = ("full_name", "user__email")
+    list_display = ("user", "phone")
+    search_fields = ("user__email",)
 
 
 admin.site.register(User, UserAdmin)

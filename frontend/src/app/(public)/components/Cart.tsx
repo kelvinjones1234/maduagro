@@ -92,8 +92,7 @@ const CartDrawer = ({ openCart, setOpenCart }) => {
                 key={item.id}
                 className="flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
               >
-                {console.log(item)
-                }
+                {console.log(item)}
                 <div className="w-20 h-20 rounded bg-gray-100 overflow-hidden flex-shrink-0">
                   <Image
                     src={item.image || "/placeholder.jpg"}
@@ -123,7 +122,7 @@ const CartDrawer = ({ openCart, setOpenCart }) => {
                   </div>
 
                   <div className="flex justify-between items-center mt-2">
-                    <div className="inline-flex items-center border border-gray-300 rounded overflow-hidden">
+                    <div className="inline-flex items-center border border-gray-300 rounded overflow-hidden shadow-sm">
                       <button
                         onClick={() => removeFromCart(item.id)}
                         className="w-8 h-6 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors"
@@ -131,7 +130,7 @@ const CartDrawer = ({ openCart, setOpenCart }) => {
                       >
                         -
                       </button>
-                      <span className="w-8 h-6 flex items-center justify-center font-xs">
+                      <span className="w-8 h-6 flex items-center font-semibold justify-center text-[.7rem]">
                         {item.quantity}
                       </span>
                       <button

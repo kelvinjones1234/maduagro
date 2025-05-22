@@ -55,7 +55,9 @@ const ResourcesAndSection = () => {
     <div className="mb-16 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-3xl p-4 lg:p-10 text-gray-800">
       <div className="flex flex-col laptop-lg:flex-row justify-between items-start laptop-lg:items-center mb-8">
         <div>
-          <h2 className="text-3xl font-bold mb-2">Resources & Support</h2>
+          <h2 className="text-[clamp(1rem,8vw,1.5rem)] font-bold mb-2">
+            Resources & Support
+          </h2>
           <p className="text-gray-600 max-w-xl">
             Everything you need to get the most out of your food storage
             monitoring system

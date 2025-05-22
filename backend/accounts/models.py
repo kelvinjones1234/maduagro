@@ -29,6 +29,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -51,7 +53,6 @@ class WholeSellerProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="whole_seller_profile"
     )
-    full_name = models.CharField(max_length=100)
     business_name = models.CharField(max_length=300)
     phone = models.CharField(max_length=11)
     shop_description = models.TextField(blank=True)
@@ -68,7 +69,6 @@ class BulkBuyerProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="bulk_buyer_profile"
     )
-    full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     address_line1 = models.TextField()
     address_line2 = models.TextField(blank=True)
@@ -86,7 +86,6 @@ class RegularSellerProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="regular_seller_profile"
     )
-    full_name = models.CharField(max_length=100)
     nickname = models.CharField(max_length=25, unique=True, null=True)
     phone = models.CharField(max_length=20)
     profile_picture = models.ImageField(
@@ -103,7 +102,6 @@ class RegularBuyerProfile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="regular_buyer_profile"
     )
-    full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     delivery_address = models.TextField()
     profile_picture = models.ImageField(

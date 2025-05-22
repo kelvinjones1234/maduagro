@@ -23,6 +23,10 @@ import ProductCard from "./components/ProductCard";
 import { ratings, priceRanges } from "./utils/constants";
 import ProductSort from "./components/ProductSort";
 import ProductFilters from "./components/ProductFilters";
+import SkeletonProductCard from "./components/skeletons/SkeletonProductCard";
+import SkeletonProductFilters from "./components/skeletons/SkeletonProductFilters";
+import SkeletonProductSort from "./components/skeletons/SkeletonProductSort";
+
 const ProductListingPage = () => {
   // State management
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -36,6 +40,7 @@ const ProductListingPage = () => {
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [categories, setCategories] = useState<Category[]>([]);
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const productsPerPage = 30;
 
@@ -43,12 +48,15 @@ const ProductListingPage = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true); // Start loading
+
       try {
         const res = await fetch("http://127.0.0.1:8000/api/categories/");
         const data: { results: Category[] } | Category[] = await res.json();
         setCategories(Array.isArray(data) ? data : data.results);
       } catch (error) {
         console.error("Error fetching categories:", error);
+        setLoading(false); // End loading
       }
     };
 
@@ -57,6 +65,7 @@ const ProductListingPage = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true); // Start loading
       try {
         const params = new URLSearchParams();
         params.append("page", currentPage.toString());
@@ -102,6 +111,8 @@ const ProductListingPage = () => {
         console.error("Error fetching products:", error);
         setFilteredProducts([]);
         setTotalProducts(0);
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
@@ -115,7 +126,6 @@ const ProductListingPage = () => {
     sortBy,
     categories,
   ]);
-
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -196,8 +206,6 @@ const ProductListingPage = () => {
     );
   };
 
-  console.log("hello", searchQuery);
-
   return (
     <div className="mx-auto py-8 font-poppins mt-[7rem] text-[clamp(.75rem,1.2vw,.9rem)]">
       <div className="flex flex-col laptop-lg:flex-row justify-between items-start laptop-lg:items-center mb-8">
@@ -246,85 +254,84 @@ const ProductListingPage = () => {
       </div>
 
       <div className="flex flex-col laptop-lg:flex-row gap-8">
-        <ProductFilters
-          isFilterVisible={isFilterVisible}
-          categories={categories}
-          activeFilters={activeFilters}
-          activePriceRanges={activePriceRanges}
-          activeRatings={activeRatings}
-          toggleCategoryFilter={(category: string) => {
-            setCurrentPage(1);
-            setActiveFilters(
-              activeFilters.includes(category)
-                ? activeFilters.filter((f) => f !== category)
-                : [...activeFilters, category]
-            );
-          }}
-          togglePriceRangeFilter={(range: string) => {
-            setCurrentPage(1);
-            setActivePriceRanges(
-              activePriceRanges.includes(range)
-                ? activePriceRanges.filter((r) => r !== range)
-                : [...activePriceRanges, range]
-            );
-          }}
-          toggleRatingFilter={(rating: number) => {
-            setCurrentPage(1);
-            setActiveRatings(
-              activeRatings.includes(rating)
-                ? activeRatings.filter((r) => r !== rating)
-                : [...activeRatings, rating]
-            );
-          }}
-          clearFilters={clearFilters}
-          priceRanges={priceRanges}
-          ratings={ratings}
-        />
+        {loading ? (
+          <div className="hidden laptop-lg:block">
+            <SkeletonProductFilters />
+          </div>
+        ) : (
+          <ProductFilters
+            isFilterVisible={isFilterVisible}
+            categories={categories}
+            activeFilters={activeFilters}
+            activePriceRanges={activePriceRanges}
+            activeRatings={activeRatings}
+            toggleCategoryFilter={(category: string) => {
+              setCurrentPage(1);
+              setActiveFilters(
+                activeFilters.includes(category)
+                  ? activeFilters.filter((f) => f !== category)
+                  : [...activeFilters, category]
+              );
+            }}
+            togglePriceRangeFilter={(range: string) => {
+              setCurrentPage(1);
+              setActivePriceRanges(
+                activePriceRanges.includes(range)
+                  ? activePriceRanges.filter((r) => r !== range)
+                  : [...activePriceRanges, range]
+              );
+            }}
+            toggleRatingFilter={(rating: number) => {
+              setCurrentPage(1);
+              setActiveRatings(
+                activeRatings.includes(rating)
+                  ? activeRatings.filter((r) => r !== rating)
+                  : [...activeRatings, rating]
+              );
+            }}
+            clearFilters={clearFilters}
+            priceRanges={priceRanges}
+            ratings={ratings}
+          />
+        )}
 
         <div className="flex-1">
-          <ProductSort
-            sortBy={sortBy}
-            setSortBy={(value: string) => {
-              setSortBy(value);
-              setCurrentPage(1);
-            }}
-            totalProducts={totalProducts}
-            filteredProductsLength={filteredProducts.length}
-          />
-
-          {filteredProducts.length > 0 ? (
+          {loading ? (
+            <SkeletonProductSort />
+          ) : (
+            <ProductSort
+              sortBy={sortBy}
+              setSortBy={(value: string) => {
+                setSortBy(value);
+                setCurrentPage(1);
+              }}
+              totalProducts={totalProducts}
+              filteredProductsLength={filteredProducts.length}
+            />
+          )}
+          {loading ? (
             <div className="grid grid-cols-2 tablet-sm:grid-cols-3 laptop-lg:grid-cols-3 tablet-lg:grid-cols-3 desktop-lg:grid-cols-4 wide:grid-cols-5 gap-4">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  hoveredProductId={hoveredProductId}
-                  setHoveredProductId={setHoveredProductId}
-                  addToCart={addToCart}
-                  removeFromCart={removeFromCart}
-                  cart={cart}
-                  toggleCart={toggleCart}
-                />
+              {Array.from({ length: productsPerPage }).map((_, index) => (
+                <SkeletonProductCard key={index} />
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
-              <div className="flex flex-col items-center justify-center py-8">
-                <Search className="h-12 w-12 text-gray-300 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  No products found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  We couldn't find any products matching your current filters.
-                </p>
-                <button
-                  onClick={clearFilters}
-                  className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition"
-                >
-                  Clear all filters
-                </button>
+            filteredProducts.length > 0 && (
+              <div className="grid grid-cols-2 tablet-sm:grid-cols-3 laptop-lg:grid-cols-3 tablet-lg:grid-cols-3 desktop-lg:grid-cols-4 wide:grid-cols-5 gap-4">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    hoveredProductId={hoveredProductId}
+                    setHoveredProductId={setHoveredProductId}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                    cart={cart}
+                    toggleCart={toggleCart}
+                  />
+                ))}
               </div>
-            </div>
+            )
           )}
 
           {totalProducts > productsPerPage && renderPagination()}

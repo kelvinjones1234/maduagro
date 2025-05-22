@@ -1,9 +1,52 @@
+// ProductCard.tsx
 import React from "react";
 import Image from "next/image";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { renderRatingStars } from "../utils/helpers";
+import Link from "next/link";
 
-const ProductCard = ({
+// Types
+interface SellerProfile {
+  nickname?: string;
+  full_name?: string;
+}
+
+interface ProductCategory {
+  category_name: string;
+}
+
+interface Product {
+  id: number;
+  product_name: string;
+  product_price: number;
+  image: string;
+  available: boolean;
+  average_rating?: number;
+  review_count?: number;
+  product_category: ProductCategory;
+  seller_profile?: SellerProfile;
+}
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
+}
+
+// Only the props needed by this component
+interface ProductCardProps {
+  product: Product;
+  hoveredProductId: number | null;
+  setHoveredProductId: React.Dispatch<React.SetStateAction<number | null>>;
+  addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  removeFromCart: (id: number) => void;
+  cart: CartItem[];
+  toggleCart: () => void;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({
   product,
   hoveredProductId,
   setHoveredProductId,
@@ -15,39 +58,44 @@ const ProductCard = ({
   const isInCart = cart.find((i) => i.id === product.id);
 
   return (
-    <div
-      className={`bg-white rounded-lg overflow-hidden border border-gray-100 transition group hover:shadow-md ${
-        product.available ? "cursor-pointer" : "opacity-90"
-      }`}
-      aria-disabled={!product.available}
-    >
-      <div className="relative aspect-square overflow-hidden">
-        <Image
-          src={product.image || "/placeholder.jpg"}
-          alt={product.product_name}
-          layout="fill"
-          objectFit="cover"
-          className="group-hover:scale-105 transition-transform duration-500"
-        />
-        {!product.available && (
-          <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
-            <span className="bg-red-600 text-white font-bold text-[.7rem] px-3 py-1 rounded-full shadow-lg">
-              OUT OF STOCK
-            </span>
-          </div>
-        )}
-        {product.available && (
-          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={toggleCart}
-              className="bg-white bg-opacity-90 p-2 rounded-full cursor-pointer shadow-md hover:bg-amber-500 hover:text-white transition-colors"
-              aria-label="Quick add to cart"
-            >
-              <ShoppingCart className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-      </div>
+    <div className="bg-white rounded-lg overflow-hidden border border-gray-100 transition hover:shadow-md">
+      <Link href={`/products/${product.id}`}>
+        <div
+          className={`relative aspect-square overflow-hidden group ${
+            product.available ? "cursor-pointer" : "opacity-90"
+          }`}
+          aria-disabled={!product.available}
+        >
+          <Image
+            src={product.image || "/placeholder.jpg"}
+            alt={product.product_name}
+            layout="fill"
+            objectFit="cover"
+            className="group-hover:scale-105 transition-transform duration-500"
+          />
+          {!product.available && (
+            <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
+              <span className="bg-red-600 text-white font-bold text-[.7rem] px-3 py-1 rounded-full shadow-lg">
+                OUT OF STOCK
+              </span>
+            </div>
+          )}
+          {product.available && (
+            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleCart();
+                }}
+                className="bg-white bg-opacity-90 p-2 rounded-full cursor-pointer shadow-md hover:bg-amber-500 hover:text-white transition-colors"
+                aria-label="Quick add to cart"
+              >
+                <ShoppingCart className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      </Link>
 
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
