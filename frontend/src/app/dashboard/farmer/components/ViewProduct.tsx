@@ -2,13 +2,12 @@ import { X } from "lucide-react";
 import { useDashboard } from "../../context/DashboardContext";
 
 export default function ViewProduct() {
-  const { selectedProduct, getProductMetrics, setShowModal } =
-    useDashboard();
+  const { selectedProduct, getProductMetrics, setShowModal } = useDashboard();
 
   const metrics = getProductMetrics(selectedProduct?.id!);
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl w-full mx-auto overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-sm w-full mx-auto overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
         <h3 className="text-lg font-semibold text-gray-900">Product Details</h3>
@@ -26,22 +25,21 @@ export default function ViewProduct() {
         {/* Product Info */}
         <div className="flex flex-col tablet-lg:flex-row items-center gap-6">
           <div className="flex-shrink-0 w-72 h-48 rounded-ful bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-gray-700 text-2xl font-bold">
-            {selectedProduct?.name.charAt(0)}
+            <img
+              src={selectedProduct?.image}
+              alt={selectedProduct?.product_name}
+              className="h-full w-full object-cover"
+            />
           </div>
           <div className="text-center tablet-lg:text-left">
             <h2 className="text-xl font-bold text-gray-900">
-              {selectedProduct?.name}
+              {selectedProduct?.product_name}
             </h2>
             <p className="text-sm text-gray-500">{selectedProduct?.category}</p>
             <div
-              className={`mt-2 inline-block px-3 py-1 text-xs font-semibold rounded-full
-              ${
-                selectedProduct?.warning
-                  ? "bg-yellow-100 text-yellow-800"
-                  : "bg-green-100 text-green-800"
-              }`}
+              className={`mt-2 inline-block py-1 text-xs font-semibold rounded-full`}
             >
-              {selectedProduct?.status}
+              {selectedProduct?.available_quantity ?? 0} in stock
             </div>
           </div>
         </div>
@@ -51,7 +49,7 @@ export default function ViewProduct() {
           <div>
             <h4 className="text-sm font-medium text-gray-500">Quantity</h4>
             <p className="mt-1 text-lg font-semibold text-gray-900">
-              {selectedProduct?.quantity}
+              {selectedProduct?.weight_per_unit}kg/unit
             </p>
           </div>
           <div>
@@ -59,7 +57,7 @@ export default function ViewProduct() {
               Price per Unit
             </h4>
             <p className="mt-1 text-lg font-semibold text-gray-900">
-              {selectedProduct?.price}
+              {selectedProduct?.product_price}
             </p>
           </div>
         </div>
@@ -70,7 +68,7 @@ export default function ViewProduct() {
             Description
           </h4>
           <p className="text-sm text-gray-700">
-            {selectedProduct?.description}
+            {selectedProduct?.product_description}
           </p>
         </div>
 
@@ -83,7 +81,7 @@ export default function ViewProduct() {
             {[
               { label: "Total Views", value: metrics?.views },
               { label: "Orders", value: metrics?.orders },
-              { label: "Rating", value: metrics?.rating },
+              { label: "Rating", value: selectedProduct?.average_rating },
               { label: "Comments", value: metrics?.comments },
             ].map((metric, index) => (
               <div key={index} className="text-center">

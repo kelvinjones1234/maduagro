@@ -1,11 +1,9 @@
-// ProductCard.tsx
 import React from "react";
 import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import { renderRatingStars } from "../utils/helpers";
 import Link from "next/link";
 
-// Types
 interface SellerProfile {
   nickname?: string;
   full_name?: string;
@@ -35,7 +33,6 @@ interface CartItem {
   image?: string;
 }
 
-// Only the props needed by this component
 interface ProductCardProps {
   product: Product;
   hoveredProductId: number | null;

@@ -1,3 +1,5 @@
+"use client";
+
 import { X, Upload } from "lucide-react";
 import { useDashboard } from "../../context/DashboardContext";
 import { useState, useEffect, useRef } from "react";
@@ -26,14 +28,15 @@ export default function EditProduct() {
   useEffect(() => {
     if (selectedProduct) {
       setProductForm({
-        name: selectedProduct.name || "",
-        category: selectedProduct.category || "",
-        quantity: selectedProduct.quantity,
-        price: selectedProduct.price,
-        description: selectedProduct.description || "",
-        status: selectedProduct.status || "available",
+        name: selectedProduct.product_name || "",
+        category: selectedProduct.product_category.category_name || "",
+        quantity: selectedProduct.available_quantity,
+        price: selectedProduct.product_price,
+        description: selectedProduct.product_description || "",
+        weight_per_unit: selectedProduct.weight_per_unit || "N/A",
+        status: selectedProduct.availability_status || "available",
         image: null,
-        imagePreview: selectedProduct.imagePreview || undefined,
+        imagePreview: selectedProduct.image || undefined,
       });
     }
   }, [selectedProduct]);
@@ -57,8 +60,8 @@ export default function EditProduct() {
       reader.onloadend = () => {
         setProductForm((prev) => ({
           ...prev,
-          image: image,
-          imagePreview: imagePreview,
+          imagePreview: reader.result as string,
+          image: file,
         }));
       };
       reader.readAsDataURL(file);
@@ -76,7 +79,7 @@ export default function EditProduct() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-xl w-full overflow-hidden">
+    <div className="bg-white rounded-lg shadow-sm w-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
         <h3 className="text-lg font-semibold text-gray-800">Edit Product</h3>
@@ -155,7 +158,7 @@ export default function EditProduct() {
               name="name"
               value={productForm.name}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border outline-0 border-gray-300 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
               placeholder="Enter product name"
               required
             />
@@ -169,7 +172,7 @@ export default function EditProduct() {
               name="category"
               value={productForm.category}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
               placeholder="e.g., Vegetables, Fruits, Dairy"
               required
             />
@@ -184,7 +187,21 @@ export default function EditProduct() {
               value={productForm.quantity}
               onChange={handleChange}
               min="0"
-              className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Weight Per Unit (kg)*
+            </label>
+            <input
+              type="number"
+              name="weight_per_unit"
+              value={productForm.weight_per_unit}
+              onChange={handleChange}
+              min="0"
+              className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
               required
             />
           </div>
@@ -199,7 +216,7 @@ export default function EditProduct() {
               onChange={handleChange}
               min="0"
               step="0.01"
-              className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
               required
             />
           </div>
@@ -211,7 +228,7 @@ export default function EditProduct() {
               name="status"
               value={productForm.status}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
               required
             >
               <option value="available">Available</option>
@@ -231,7 +248,7 @@ export default function EditProduct() {
             rows={4}
             value={productForm.description}
             onChange={handleChange}
-            className="w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
+            className="w-full rounded-md border border-gray-300 outline-0 px-3 py-2  text-gray-900 focus:ring-1 focus:ring-green-500 focus:border-green-500"
             placeholder="Provide details about your product such as freshness, quality, and origin"
           ></textarea>
         </div>

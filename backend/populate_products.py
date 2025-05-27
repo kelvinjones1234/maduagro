@@ -47,6 +47,9 @@ agri_categories = [
     "Oil Crops",
 ]
 
+
+available_quantity = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
 # Dummy images to attach
 image_files = [
     os.path.join("media", "2148761770.jpg"),  # Make sure this path exists
@@ -72,7 +75,7 @@ agri_category_crops = {
 }
 
 
-availability_status = ["True", "False"]
+# availability_status = ["out", "available", "low"]
 
 # Create 5 random unique categories
 used_categories = random.sample(agri_categories, 5)
@@ -95,12 +98,13 @@ for category_name in used_categories:
                 seller=admin_user,
                 product_name=product_name,
                 product_category=category,
+                available_quantity=random.choice(available_quantity),
                 product_description=random.choice(descriptions),
                 key_information=key_info,
                 product_price=random.choice(product_price),
                 average_rating=round(random.uniform(2.0, 5.0), 1),
                 rating_count=random.randint(1, 100),
-                available=random.choice(availability_status),
+                # available=random.choice(availability_status),
             )
             product.image.save(
                 f"{slugify(product_name)}.jpg", File(img_file), save=True

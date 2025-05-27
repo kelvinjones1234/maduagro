@@ -39,7 +39,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const { id } = await params; 
 
   if (!id) {
     return { title: "Product Not Found" };

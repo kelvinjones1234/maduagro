@@ -3,9 +3,6 @@ import InventoryTab from "./InventoryTab";
 import OrdersTab from "./OrdersTab";
 import MessagesTab from "./MessagesTab";
 import ProfileTab from "./ProfileTab";
-import MarketTrends from "./MarketTrends";
-import RecentActivity from "./RecentActivity";
-import Calendar from "./Calendar";
 import AddNewProduct from "./AddProduct";
 import ViewProduct from "./ViewProduct";
 import DashboardSidebar from "./DashboardSidebar";
@@ -17,14 +14,8 @@ import OfferTab from "./OfferTab";
 import DashboardOverview from "./DashboardOverview";
 
 export default function DashboardContent() {
-  const {
-    productModal,
-    activeTab,
-    showModal,
-    modalType,
-    selectedProduct,
-    selectedOrder,
-  } = useDashboard();
+  const { activeTab, showModal, modalType, selectedProduct, selectedOrder } =
+    useDashboard();
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-800 overflow-hidden">
@@ -98,59 +89,26 @@ export default function DashboardContent() {
             {/* Main content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main content area */}
-              <div className="p-4 tablet-lg:p-6 lg:col-span-2  bg-white">
+              <div className="tablet-lg:p-6 lg:col-span-2  bg-white">
                 {/* Dashboard Home Tab */}
                 {activeTab === "dashboard" && <DashboardOverview />}
-                {activeTab === "dashboard" && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        Dashboard Overview
-                      </h2>
-                      <div className="flex space-x-2">
-                        <button className="text-sm text-gray-500 hover:text-green-600 flex items-center">
-                          <span className="mr-1">This Week</span>
-                        </button>
-                        <button className="text-sm text-gray-500 hover:text-green-600 flex items-center">
-                          <span className="mr-1">This Month</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">
-                          Performance Summary
-                        </h3>
-                        <p className="text-gray-600">
-                          Monitor your sales performance, inventory status, and
-                          market trends all in one place.
-                        </p>
-                      </div>
-                      <div className="bg-gray-50 rounded-lg p-5 border border-gray-100">
-                        <h3 className="text-lg font-medium text-gray-800 mb-4">
-                          Quick Actions
-                        </h3>
-                        <div className="flex flex-wrap gap-3">
-                          <button
-                            onClick={() => productModal("addProduct")}
-                             className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
-                          >
-                            Add Product
-                          </button>
-                          <button className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                            View Orders
-                          </button>
-                          <button className="py-2 px-4 bg-white border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors">
-                            Market Report
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {/* Inventory Tab */}
                 {activeTab === "inventory" && (
+                  <>
+                    {showModal && modalType === "addProduct" ? (
+                      <AddNewProduct />
+                    ) : showModal &&
+                      modalType === "editProduct" &&
+                      selectedProduct ? (
+                      <EditProduct />
+                    ) : (
+                      <InventoryTab />
+                    )}
+                  </>
+                )}
+
+                {/* {activeTab === "inventory" && (
                   <>
                     {showModal && modalType === "addProduct" ? (
                       <AddNewProduct />
@@ -166,7 +124,7 @@ export default function DashboardContent() {
                       <InventoryTab />
                     )}
                   </>
-                )}
+                )} */}
 
                 {activeTab === "orders" && (
                   <>
@@ -209,46 +167,10 @@ export default function DashboardContent() {
                 {/* Profile Tab */}
                 {activeTab === "profile" && <ProfileTab />}
               </div>
-
-              {/* Sidebar content */}
-              <div className="space-y-8">
-                {/* Market price trends */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Market Trends
-                  </h3>
-                  <MarketTrends />
-                </div>
-
-                {/* Recent activity */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Recent Activity
-                  </h3>
-                  <RecentActivity />
-                </div>
-
-                {/* Calendar */}
-                <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                    Calendar
-                  </h3>
-                  <Calendar />
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* View Product Modal */}
-      {/* {showModal && modalType === "viewProduct" && selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-auto overflow-hidden border border-gray-100">
-            <ViewProduct />
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

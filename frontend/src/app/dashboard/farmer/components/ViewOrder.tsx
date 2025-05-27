@@ -1,3 +1,6 @@
+"use client"
+
+
 import React, { useState } from "react";
 import { useDashboard } from "../../context/DashboardContext";
 import { Calendar, MapPin, Box, Truck, DollarSign, User } from "lucide-react";

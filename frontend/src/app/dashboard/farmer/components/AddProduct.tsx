@@ -1,3 +1,7 @@
+"use client"
+
+
+
 import { X, Upload } from "lucide-react";
 import { useDashboard } from "../../context/DashboardContext";
 import { useState } from "react";

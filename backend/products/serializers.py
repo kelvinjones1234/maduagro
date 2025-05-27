@@ -32,14 +32,16 @@ class ProductSerializer(serializers.ModelSerializer):
             "product_name",
             "product_category",
             "product_description",
+            "available_quantity",
             "key_information",
             "average_rating",
-            "available",
+            "availability_status",
             "rating_count",
+            "weight_per_unit",
             "product_price",
             "created_at",
             "updated_at",
-            "image", 
+            "image",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
 

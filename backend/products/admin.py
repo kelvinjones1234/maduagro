@@ -25,7 +25,6 @@ class ProductAdmin(admin.ModelAdmin):
         "rating_count",
         "product_price",
         "created_at",
-        "available",
     )
     list_filter = ("product_category", "created_at")
     search_fields = ("product_name", "seller__email", "product_category__category_name")

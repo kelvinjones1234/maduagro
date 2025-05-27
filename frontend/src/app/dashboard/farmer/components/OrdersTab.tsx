@@ -1,3 +1,5 @@
+"use client"
+
 import { Search, Filter, Eye } from "lucide-react";
 import { orders } from "../../ConstData";
 import { useDashboard } from "../../context/DashboardContext";

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Filter, X, Star } from "lucide-react";
 import ActiveFilters from "./ActiveFilters";
@@ -58,6 +60,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             <button
               onClick={clearFilters}
               className="text-amber-500 hover:text-amber-600"
+              aria-label="Clear all filters"
             >
               Clear all
             </button>
@@ -79,16 +82,17 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
           <h3 className="font-medium text-gray-900 mb-3">Category</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <div key={category.category_name} className="flex items-center">
+              <div key={category.category_slug} className="flex items-center">
                 <input
                   type="checkbox"
-                  id={`category-${category.category_name}`}
-                  checked={activeFilters.includes(category.category_name)}
-                  onChange={() => toggleCategoryFilter(category.category_name)}
+                  id={`category-${category.category_slug}`}
+                  checked={activeFilters.includes(category.category_slug)}
+                  onChange={() => toggleCategoryFilter(category.category_slug)}
                   className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
+                  aria-label={`Filter by ${category.category_name}`}
                 />
                 <label
-                  htmlFor={`category-${category.category_name}`}
+                  htmlFor={`category-${category.category_slug}`}
                   className="ml-2 text-gray-700 flex-1"
                 >
                   {category.category_name}
@@ -113,6 +117,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   checked={activePriceRanges.includes(range.value)}
                   onChange={() => togglePriceRangeFilter(range.value)}
                   className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
+                  aria-label={`Filter by price range ${range.range}`}
                 />
                 <label
                   htmlFor={`price-${range.value}`}
@@ -137,6 +142,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   checked={activeRatings.includes(rating)}
                   onChange={() => toggleRatingFilter(rating)}
                   className="h-4 w-4 text-amber-500 rounded border-gray-300 focus:ring-amber-500"
+                  aria-label={`Filter by ${rating} star rating and up`}
                 />
                 <label
                   htmlFor={`rating-${rating}`}
@@ -172,7 +178,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
           Our team of experts is here to help you find the perfect solution for
           your farm.
         </p>
-        <button className="w-full bg-white text-emerald-600 hover:bg-emerald-50 font-medium py-2 rounded-lg border border-emerald-200 transition">
+        <button
+          className="w-full bg-white text-emerald-600 hover:bg-emerald-50 font-medium py-2 rounded-lg border border-emerald-200 transition"
+          aria-label="Contact support"
+        >
           Contact Support
         </button>
       </div>

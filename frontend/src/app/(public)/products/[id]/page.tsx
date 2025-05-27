@@ -87,7 +87,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
       }
     };
 
-    fetchProduct();
+    fetchProduct(); 
   }, [params]);
 
   return (

@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useContext, createContext, useState, ReactNode } from "react";
 import { ModalType } from "../types";
 import { Dispatch, SetStateAction } from "react";
-import { ProductType, OrderType } from "../types"; // <- Make sure OrderType exists
+import { ProductType, OrderType } from "../types"; 
 import { products, productComments, orders } from "../ConstData";
 
 // Define the context type
@@ -26,6 +28,8 @@ type DashboardContextType = {
     orders: number;
     comments: number;
   } | null;
+  refreshProducts: () => void;
+  refreshKey: number;
 };
 
 const Dashboard = createContext<DashboardContextType | undefined>(undefined);
@@ -35,6 +39,7 @@ const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
     null
   );
@@ -48,6 +53,10 @@ const DashboardProvider = ({ children }: { children: ReactNode }) => {
     setSelectedProduct(product);
     setSelectedOrder(null); // reset order
     setShowModal(true);
+  };
+
+  const refreshProducts = () => {
+    setRefreshKey((prev) => prev + 1);
   };
 
   const orderModal = (type: ModalType, order: OrderType | null = null) => {
@@ -82,8 +91,10 @@ const DashboardProvider = ({ children }: { children: ReactNode }) => {
         setSelectedOrder,
         setShowModal,
         getProductMetrics,
-        currentPage,
         setCurrentPage,
+        refreshProducts,
+        refreshKey,
+        currentPage,
         showModal,
         modalType,
         selectedProduct,

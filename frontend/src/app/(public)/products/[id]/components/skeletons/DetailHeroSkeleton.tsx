@@ -6,7 +6,7 @@ export default function DetailHeroSkeleton() {
     <div className="mx-auto py-8 animate-pulse">
       {/* Main product info section */}
       <div className="grid grid-cols-1 tablet-lg:grid-cols-2 gap-8 mb-12">
-        {/* Left Column: Image Skeleton */}
+        {/* Left Column: Image Skeleton */} 
         <div>
           <div className="relative aspect-4/3 rounded-xl bg-gray-300" />
 

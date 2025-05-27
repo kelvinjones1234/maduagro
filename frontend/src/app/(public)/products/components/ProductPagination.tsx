@@ -9,8 +9,8 @@ const ProductPagination = ({ currentPage, totalPages, handlePageChange }) => {
     startPage = Math.max(1, endPage - maxVisiblePages + 1);
   }
   const pages = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, i) => startPage + i
+    { length: endPage - startPage + 1 }, 
+    (_, i) => startPage + i 
   );
 
   return (

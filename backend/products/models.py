@@ -24,6 +24,11 @@ class ProductCategory(models.Model):
 
 
 class Product(models.Model):
+    STOCK_STATUS_CHOICES = [
+        ("available", "Available"),
+        ("low", "Low in Stock"),
+        ("out", "Out of Stock"),
+    ]
     seller = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -45,9 +50,15 @@ class Product(models.Model):
         default=0, editable=False
     )  # Denormalized
     created_at = models.DateTimeField(auto_now_add=True)
-    available = models.BooleanField(default=False)
+    available_quantity = models.PositiveIntegerField(default=20)
+    availability_status = models.CharField(
+        max_length=10,
+        choices=STOCK_STATUS_CHOICES,
+        default="out",
+    )
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to="", null=True, blank=True)
+    weight_per_unit = models.PositiveIntegerField(default=3)
 
     def __str__(self):
         return self.product_name
@@ -72,6 +83,15 @@ class Product(models.Model):
             ratings.aggregate(models.Avg("score"))["score__avg"] or 0.0
         )
         self.save(update_fields=["average_rating", "rating_count"])
+
+    def save(self, *args, **kwargs):
+        if self.available_quantity == 0:
+            self.availability_status = "out"
+        elif self.available_quantity < 5:
+            self.availability_status = "low"
+        else:
+            self.availability_status = "available"
+        super().save(*args, **kwargs)
 
 
 class Faq(models.Model):
