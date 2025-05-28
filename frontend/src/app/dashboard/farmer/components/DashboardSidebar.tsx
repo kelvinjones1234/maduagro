@@ -1,6 +1,7 @@
 import { LogOut, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useDashboard } from "../../context/DashboardContext";
+import { useAuth } from "@/app/context/AuthContext";
 import {
   Home,
   ShoppingBag,
@@ -37,6 +38,7 @@ const navigationGroups = [
 
 export default function DashboardSidebar() {
   const { activeTab, setActiveTab } = useDashboard();
+  const { logout } = useAuth();
 
   const handleNavClick = (tabId: string) => {
     if (tabId === "logout") {
@@ -97,7 +99,7 @@ export default function DashboardSidebar() {
           <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-medium">
             <LogOut className="" />
           </div>
-          <div className="cursor-pointer">
+          <div className="cursor-pointer" onClick={() => logout()}>
             <p className="text-sm font-medium hover:text-gray-900 text-gray-500">
               Logout
             </p>

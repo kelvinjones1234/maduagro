@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "tinymce",
+    "rest_framework_simplejwt",
     # applications
     "accounts",
     "products",
@@ -120,7 +122,11 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Custom settings
+# Custom settings # Custom settings
+# Custom settings # Custom settings
+# Custom settings # Custom settings
+# Custom settings # Custom settings
+
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "/media/"
@@ -130,13 +136,28 @@ CORS_ALLOW_ALL_ORIGINS: True
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     ),
+# }
 
 REST_FRAMEWORK = {
-    # "DEFAULT_AUTHENTICATION_CLASSES": (
-    #     "accounts.authentication.CookieJWTAuthentication",
-    # ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "accounts.authentication.CookieJWTAuthentication",  # Update with actual path
+    ),
 }
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "AUTH_COOKIE": "access_token",
+    "AUTH_COOKIE_SECURE": False,  # True in production
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "None",
+}
+
 
 AUTH_USER_MODEL = "accounts.User"

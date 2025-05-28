@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import (
     User,
-    WholeSellerProfile,
+    WholeSalerProfile,
     BulkBuyerProfile,
     RegularBuyerProfile,
     RegularSellerProfile,
@@ -17,27 +17,31 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "is_staff",
         "is_active",
-        "is_regular_buyer",
-        "is_regular_seller",
-        "is_wholeseller",
-        "is_bulk_buyer",
     )
     list_filter = (
         "is_staff",
         "is_active",
-        "is_regular_buyer",
-        "is_regular_seller",
-        "is_wholeseller",
-        "is_bulk_buyer",
     )
     ordering = ("email",)
-    search_fields = ("email",)
+    search_fields = ("email", "first_name", "last_name")
+
+    # Fields displayed when viewing/editing a user
     fieldsets = (
         (None, {"fields": ("email", "password")}),
+        (
+            "Personal info",
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                )
+            },
+        ),
         (
             "Permissions",
             {
                 "fields": (
+                    "is_active",
                     "is_staff",
                     "is_superuser",
                     "groups",
@@ -47,6 +51,8 @@ class UserAdmin(BaseUserAdmin):
         ),
         ("Important dates", {"fields": ("last_login",)}),
     )
+
+    # Fields displayed when creating a new user via the admin
     add_fieldsets = (
         (
             None,
@@ -54,21 +60,19 @@ class UserAdmin(BaseUserAdmin):
                 "classes": ("wide",),
                 "fields": (
                     "email",
+                    "first_name",
+                    "last_name",
                     "password1",
                     "password2",
                     "is_staff",
                     "is_active",
-                    "is_regular_buyer",
-                    "is_regular_seller",
-                    "is_wholeseller",
-                    "is_bulk_buyer",
                 ),
             },
         ),
     )
 
 
-@admin.register(WholeSellerProfile)
+@admin.register(WholeSalerProfile)
 class WholeSellerProfileAdmin(admin.ModelAdmin):
     list_display = ("business_name", "user", "phone", "is_verified")
     search_fields = ("business_name", "user__email")
@@ -82,7 +86,7 @@ class BulkBuyerProfileAdmin(admin.ModelAdmin):
 
 @admin.register(RegularSellerProfile)
 class RegularSellerProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "phone", "is_verified")
+    list_display = ("user", "is_verified")
     search_fields = ("user__email",)
 
 

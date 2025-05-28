@@ -20,7 +20,9 @@ class ProductCategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     average_rating = serializers.FloatField(read_only=True)
     rating_count = serializers.IntegerField(read_only=True)
-    product_category = ProductCategorySerializer(read_only=True)
+    category_details = ProductCategorySerializer(
+        source="product_category", read_only=True
+    )
     seller_profile = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,12 +30,12 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "seller",
-            "seller_profile",  # ✅ Include profile
+            "seller_profile",
             "product_name",
             "product_category",
+            "category_details",
             "product_description",
-            "available_quantity",
-            "key_information",
+            "available_quantity", 
             "average_rating",
             "availability_status",
             "rating_count",

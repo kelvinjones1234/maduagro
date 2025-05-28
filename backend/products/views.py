@@ -10,8 +10,6 @@ from django.db import transaction
 from rest_framework.decorators import action
 
 
-
-
 class ProductPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = "page_size"
@@ -81,67 +79,28 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
+
+
+
 class WholesalerViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
-    # permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ["product_name"]
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response({"detail": "Product deleted"}, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=['post'], url_path='bulk-delete')
-    def bulk_delete(self, request):
-        # Extract product IDs from request data
-        product_ids = request.data.get('product_ids', [])
-        
-        if not product_ids:
-            return Response(
-                {"detail": "No product IDs provided"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if not isinstance(product_ids, list):
-            return Response(
-                {"detail": "product_ids must be a list"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-            # Convert IDs to integers to ensure valid input
-            product_ids = [int(pid) for pid in product_ids]
-        except (ValueError, TypeError):
-            return Response(
-                {"detail": "Invalid product IDs provided"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        # Use a transaction to ensure atomicity
-        with transaction.atomic():
-            # Filter products by IDs and ensure they exist
-            products = Product.objects.filter(id__in=product_ids)
-            if not products.exists():
-                return Response(
-                    {"detail": "No valid products found for the provided IDs"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-
-            # Delete the products
-            deleted_count = products.delete()[0]
-
-        return Response(
-            {"detail": f"Successfully deleted {deleted_count} product(s)"},
-            status=status.HTTP_200_OK
-        )
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        queryset = Product.objects.all()
+        queryset = Product.objects.filter(seller=user)
 
-        # Filter by availability
+        # Filter by category slug(s)
+        category_slugs = self.request.query_params.getlist("category")
+        if category_slugs:
+            queryset = queryset.filter(
+                product_category__category_slug__in=category_slugs
+            )
+
+        # Filter by availability status
         is_available = self.request.query_params.get("is_available")
         valid_choices = ["available", "low", "out"]
         if is_available and is_available.lower() in valid_choices:
@@ -165,6 +124,62 @@ class WholesalerViewSet(viewsets.ModelViewSet):
                 except ValueError:
                     pass
 
+        # Filter by minimum average rating
+        rating = self.request.query_params.get("rating")
+        if rating:
+            try:
+                min_rating = float(rating)
+                queryset = queryset.filter(average_rating__gte=min_rating)
+            except ValueError:
+                pass
+
+        sort_by = self.request.query_params.get("sort_by")
+        if sort_by == "price_asc":
+            queryset = queryset.order_by("product_price")
+        elif sort_by == "price_desc":
+            queryset = queryset.order_by("-product_price")
         return queryset
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({"detail": "Product deleted"}, status=status.HTTP_200_OK)
 
+    @action(detail=False, methods=["post"], url_path="bulk-delete")
+    def bulk_delete(self, request):
+        product_ids = request.data.get("product_ids", [])
+
+        if not product_ids:
+            return Response(
+                {"detail": "No product IDs provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not isinstance(product_ids, list):
+            return Response(
+                {"detail": "product_ids must be a list"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            product_ids = [int(pid) for pid in product_ids]
+        except (ValueError, TypeError):
+            return Response(
+                {"detail": "Invalid product IDs provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        with transaction.atomic():
+            products = Product.objects.filter(id__in=product_ids)
+            if not products.exists():
+                return Response(
+                    {"detail": "No valid products found for the provided IDs"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            deleted_count = products.delete()[0]
+
+        return Response(
+            {"detail": f"Successfully deleted {deleted_count} product(s)"},
+            status=status.HTTP_200_OK,
+        )

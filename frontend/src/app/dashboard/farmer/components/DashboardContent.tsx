@@ -98,10 +98,6 @@ export default function DashboardContent() {
                   <>
                     {showModal && modalType === "addProduct" ? (
                       <AddNewProduct />
-                    ) : showModal &&
-                      modalType === "editProduct" &&
-                      selectedProduct ? (
-                      <EditProduct />
                     ) : (
                       <InventoryTab />
                     )}

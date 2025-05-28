@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Eye,
-  EyeOff,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  ShieldCheck,
-} from "lucide-react";
-import Footer from "@/app/(public)/components/Footer";
+import { Eye, EyeOff, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 
-export default function SignUpForm() {
+type Props = {
+  selectedRole: string;
+};
+
+export default function SignUpForm({ selectedRole }: Props) {
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -90,7 +88,7 @@ export default function SignUpForm() {
   }, [formData.password]);
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: { [key: string]: string } = {};
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required";
     } else if (formData.firstName.trim().length < 2) {
@@ -125,14 +123,14 @@ export default function SignUpForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const { name } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
     validateField(name);
   };
 
-  const validateField = (fieldName) => {
-    const newErrors = { ...errors };
+  const validateField = (fieldName: string) => {
+    const newErrors: { [key: string]: string } = { ...errors };
     switch (fieldName) {
       case "firstName":
         if (!formData.firstName.trim()) {
@@ -202,7 +200,7 @@ export default function SignUpForm() {
     setErrors(newErrors);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -213,9 +211,9 @@ export default function SignUpForm() {
     }
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const touchedFields = {};
+    const touchedFields: { [key: string]: boolean } = {};
     Object.keys(formData).forEach((key) => {
       touchedFields[key] = true;
     });
@@ -224,9 +222,21 @@ export default function SignUpForm() {
     if (isValid) {
       setIsSubmitting(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Sign up data:", formData);
-        setFormSubmitted(true);
+        const success = await register(
+          formData.email,
+          formData.firstName,
+          formData.lastName,
+          formData.password,
+          selectedRole
+        );
+        if (success) {
+          setFormSubmitted(true);
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            form: "Failed to create account. Please try again.",
+          }));
+        }
       } catch (error) {
         console.error("Error submitting form:", error);
         setErrors((prev) => ({
@@ -241,7 +251,7 @@ export default function SignUpForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-2 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full bg-white rounded-lg borde border-gray-100 px-4 py-6">
+      <div className="max-w-xl w-full bg-white rounded-lg border border-gray-100 px-4 py-6">
         {formSubmitted ? (
           <div className="text-center py-16">
             <div className="flex justify-center mb-4">
@@ -251,7 +261,8 @@ export default function SignUpForm() {
               Account Created Successfully!
             </h2>
             <p className="text-gray-600 mb-8">
-              Thank you for joining our marketplace.
+              Thank you for joining our marketplace as a{" "}
+              {selectedRole.replace(/-/g, " ")}.
             </p>
             <Link
               href="/login"
@@ -267,7 +278,7 @@ export default function SignUpForm() {
                 Create Your Account
               </h2>
               <p className="text-gray-600 mt-2">
-                Join our marketplace to start selling your products
+                Join our marketplace as a {selectedRole.replace(/-/g, " ")}
               </p>
             </div>
 
@@ -430,7 +441,6 @@ export default function SignUpForm() {
                             ></div>
                           </div>
                           <span
-                            class
                             className={`text-xs font-medium text-${passwordStrength.color}`}
                           >
                             {passwordStrength.message}

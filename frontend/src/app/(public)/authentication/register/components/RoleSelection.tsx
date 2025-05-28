@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { useAuth } from "@/app/context/AuthContext";
 
 type Props = {
-  onSelect: () => void;
+  onSelect: (role: string) => void;
 };
 
 const FourRoleSelection = ({ onSelect }: Props) => {
   const [selectedRole, setSelectedRole] = useState("");
+  const { register } = useAuth();
 
   const roles = [
     {
-      id: "Regular-Seller",
+      id: "regular seller",
       title: "I'm a regular seller",
       icon: (
         <svg
@@ -28,7 +30,7 @@ const FourRoleSelection = ({ onSelect }: Props) => {
       ),
     },
     {
-      id: "Wholesaler",
+      id: "wholesaler",
       title: "I'm a wholesaler",
       icon: (
         <svg
@@ -45,7 +47,7 @@ const FourRoleSelection = ({ onSelect }: Props) => {
       ),
     },
     {
-      id: "Regular-Buyer",
+      id: "regular buyer",
       title: "I'm a regular buyer",
       icon: (
         <svg
@@ -62,7 +64,7 @@ const FourRoleSelection = ({ onSelect }: Props) => {
       ),
     },
     {
-      id: "Bulk-Buyer",
+      id: "bulk buyer",
       title: "I'm a bulk buyer",
       icon: (
         <svg
@@ -128,7 +130,7 @@ const FourRoleSelection = ({ onSelect }: Props) => {
       </div>
 
       <button
-        onClick={onSelect}
+        onClick={() => selectedRole && onSelect(selectedRole)}
         disabled={!selectedRole}
         className={`mt-8 text-[clamp(.7rem,4vw,1rem)] px-6 py-3 font-medium rounded-md transition-colors duration-200
     ${

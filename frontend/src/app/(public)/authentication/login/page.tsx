@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck, AlertTriangle } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
+
+  const { login } = useAuth();
 
   const validateForm = () => {
     const newErrors = {};
@@ -59,20 +62,28 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ email: true, password: true });
+
     const isValid = validateForm();
-    if (isValid) {
-      setIsLoading(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log("Login data:", { email, password });
-      } catch (error) {
+    if (!isValid) return;
+
+    setIsLoading(true);
+    setErrors({}); // Reset errors
+
+    try {
+      const success = await login(email, password);
+      if (!success) {
         setErrors((prev) => ({
           ...prev,
-          form: "Failed to log in. Please try again.",
+          form: "Invalid email or password",
         }));
-      } finally {
-        setIsLoading(false);
       }
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        form: "Failed to log in. Please try again.",
+      }));
+    } finally {
+      setIsLoading(false);
     }
   };
 

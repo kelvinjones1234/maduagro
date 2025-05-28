@@ -29,15 +29,12 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_regular_buyer = models.BooleanField(default=False)
-    is_regular_seller = models.BooleanField(default=False)
-    is_wholeseller = models.BooleanField(default=False)
-    is_bulk_buyer = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()
@@ -49,9 +46,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class WholeSellerProfile(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="whole_seller_profile"
+class WholeSalerProfile(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="wholesaler_profile"
     )
     business_name = models.CharField(max_length=300)
     phone = models.CharField(max_length=11)
@@ -61,12 +58,15 @@ class WholeSellerProfile(models.Model):
     image = models.ImageField(upload_to="images/", null=True, blank=True)
     is_verified = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ("user",)
+
     def __str__(self):
-        return f"Seller: {self.shop_name} ({self.user.email})"
+        return f"Seller: {self.business_name} ({self.user.email})"
 
 
 class BulkBuyerProfile(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="bulk_buyer_profile"
     )
     phone = models.CharField(max_length=20)
@@ -78,28 +78,34 @@ class BulkBuyerProfile(models.Model):
     country = models.CharField(max_length=50)
     profile_picture = models.ImageField(upload_to="buyers/", null=True, blank=True)
 
+    class Meta:
+        unique_together = ("user",)
+
     def __str__(self):
-        return f"Buyer: {self.full_name} ({self.user.email})"
+        return f"Buyer: {self.user.first_name} ({self.user.last_name})"
 
 
 class RegularSellerProfile(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="regular_seller_profile"
     )
     nickname = models.CharField(max_length=25, unique=True, null=True)
-    phone = models.CharField(max_length=20)
+    # phone = models.CharField(max_length=20)
     profile_picture = models.ImageField(
         upload_to="regular_sellers/", null=True, blank=True
     )
     bio = models.TextField(blank=True)
     is_verified = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ("user",)
+
     def __str__(self):
-        return f"Regular Seller: {self.full_name} ({self.user.email})"
+        return f"Regular Seller: {self.user.first_name} ({self.user.last_name})"
 
 
 class RegularBuyerProfile(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="regular_buyer_profile"
     )
     phone = models.CharField(max_length=20)
@@ -108,5 +114,8 @@ class RegularBuyerProfile(models.Model):
         upload_to="regular_buyers/", null=True, blank=True
     )
 
+    class Meta:
+        unique_together = ("user",)
+
     def __str__(self):
-        return f"Regular Buyer: {self.full_name} ({self.user.email})"
+        return f"Regular Buyer: {self.user.first_name} ({self.user.last_name})"

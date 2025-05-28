@@ -1,20 +1,20 @@
-"use client"
-
-
+"use client";
 
 import { X, Upload } from "lucide-react";
 import { useDashboard } from "../../context/DashboardContext";
 import { useState } from "react";
+import { fetchCategories, fetchProducts } from "../api";
 
 // Add New Product Modal Component
 export default function AddNewProduct() {
   const { setShowModal } = useDashboard();
   const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    quantity: "",
-    price: "",
-    description: "",
+    product_name: "",
+    product_category: "",
+    product_description: "",
+    weight_per_unit: "",
+    available_quantity: "",
+    product_price: "",
     image: null as File | null, // Update the type here
   });
 
@@ -67,36 +67,58 @@ export default function AddNewProduct() {
             aria-required="true"
           />
         </div>
-        <div>
-          <label
-            className="block text-sm font-medium text-gray-700 mb-1"
-            htmlFor="category"
-          >
-            Category
-          </label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-            aria-required="true"
-          >
-            <option value="">Select a category</option>
-            <option value="Fresh Produce">Fresh Produce</option>
-            <option value="Grain">Grain</option>
-            <option value="Tuber">Tuber</option>
-            <option value="Fruit">Fruit</option>
-            <option value="Livestock">Livestock</option>
-          </select>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-1"
+              htmlFor="category"
+            >
+              Category
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+              aria-required="true"
+            >
+              <option value="">Select a category</option>
+              <option value="Fresh Produce">Fresh Produce</option>
+              <option value="Grain">Grain</option>
+              <option value="Tuber">Tuber</option>
+              <option value="Fruit">Fruit</option>
+              <option value="Livestock">Livestock</option>
+            </select>
+          </div>
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-700 mb-1"
+              htmlFor="price"
+            >
+              Weight per Unit
+            </label>
+            <input
+              id="price"
+              name="price"
+              type="text"
+              value={formData.price}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+              placeholder="e.g. ₦800/kg"
+              aria-required="true"
+            />
+          </div>
         </div>
+
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label
               className="block text-sm font-medium text-gray-700 mb-1"
               htmlFor="quantity"
             >
-              Quantity
+              Available Quantity
             </label>
             <input
               id="quantity"
@@ -128,6 +150,7 @@ export default function AddNewProduct() {
             />
           </div>
         </div>
+
         <div>
           <label
             className="block text-sm font-medium text-gray-700 mb-1"
@@ -180,7 +203,7 @@ export default function AddNewProduct() {
                 PNG, JPG, GIF up to 10MB
               </p>
             </div>
-          </div> 
+          </div>
         </div>
       </div>
       <div className="mt-4 flex justify-end space-x-3">

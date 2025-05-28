@@ -1,5 +1,6 @@
 import React from "react";
 import "../globals.css";
+import ProtectedRoute from "../utils/ProtectedRoute";
 
 export default function DashboardLayout({
   children,
@@ -8,7 +9,9 @@ export default function DashboardLayout({
 }) {
   return (
     <div>
-      <main>{children}</main>
+      <ProtectedRoute>
+        <main>{children}</main>
+      </ProtectedRoute>
     </div>
   );
 }

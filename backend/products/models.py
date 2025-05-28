@@ -44,7 +44,6 @@ class Product(models.Model):
     )
     product_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     product_description = models.TextField()
-    key_information = models.TextField(max_length=5000, blank=True)
     average_rating = models.FloatField(default=0.0, editable=False)  # Denormalized
     rating_count = models.PositiveIntegerField(
         default=0, editable=False

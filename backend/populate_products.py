@@ -28,7 +28,6 @@ descriptions = [
     "Best in class, great for healthy living.",
 ]
 product_price = ["100", "140", "200", "300", "350", "400", "420", "450", "500"]
-key_info = "Store in a dry place. Check expiry date before use."
 
 # Agricultural categories
 agri_categories = [
@@ -100,7 +99,6 @@ for category_name in used_categories:
                 product_category=category,
                 available_quantity=random.choice(available_quantity),
                 product_description=random.choice(descriptions),
-                key_information=key_info,
                 product_price=random.choice(product_price),
                 average_rating=round(random.uniform(2.0, 5.0), 1),
                 rating_count=random.randint(1, 100),
