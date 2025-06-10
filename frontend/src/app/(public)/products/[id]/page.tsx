@@ -1,17 +1,18 @@
-"use client";
-
 import { notFound } from "next/navigation";
-import { Suspense, useState, useEffect } from "react";
 import DetailHero from "./components/DetailHero";
 import Footer from "../../components/Footer";
 import Faq from "./components/Faq";
 import ResourcesAndSupport from "./components/ResourcesAndSupport";
-import DetailHeroSkeleton from "./components/skeletons/DetailHeroSkeleton";
 
-// Define interfaces for type safety
 interface Product {
   id: number;
-  name: string;
+  product_name: string;
+  product_price: number;
+  category_name: string;
+  product_category: { category_name: string };
+  available: boolean;
+  image: string;
+  rating: number;
   description?: string;
 }
 
@@ -28,7 +29,6 @@ interface Seller {
   certifications: string[];
 }
 
-// Static seller data
 const SELLER_DATA: Seller = {
   name: "GreenFields Tech",
   location: "Nairobi, Kenya",
@@ -42,68 +42,55 @@ const SELLER_DATA: Seller = {
   certifications: ["ISO 9001", "Organic Certified"],
 };
 
-// Props type for the component, resolving params promise before usage
 interface ProductDetailProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
-export default function ProductDetail({ params }: ProductDetailProps) {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
+export default async function ProductDetail({ params }: ProductDetailProps) {
+  const { id } = await params;
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        // Await params to get id
-        const { id } = await params;
+  let product: Product | null = null;
 
-        const API_URL =
-          process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  try {
+    const res = await fetch(`${API_URL}/api/products/${id}/`, {
+      next: { revalidate: 60 }, // ISR: Revalidate every 60 seconds
+    });
 
-        const res = await fetch(`${API_URL}/api/products/${id}/`, {
-          next: { revalidate: 60 },
-        });
+    if (!res.ok) {
+      console.error(`Failed to fetch product ${id}: ${res.status}`);
+      return notFound();
+    }
 
-        if (!res.ok) {
-          console.error(`Failed to fetch product ${id}: ${res.status}`);
-          setLoading(false);
-          return notFound();
-        }
+    const data: Product = await res.json();
 
-        const data: Product = await res.json();
+    if (!data || !data.id) {
+      console.error(`Invalid product data for ID ${id}`);
+      return notFound();
+    }
 
-        if (!data || !data.id) {
-          console.error(`Invalid product data for ID ${id}`);
-          setLoading(false);
-          return notFound();
-        }
-
-        setProduct(data);
-        setLoading(false);
-      } catch (error) {
-        console.error(`Error fetching product:`, error);
-        setLoading(false);
-        return notFound();
-      }
-    };
-
-    fetchProduct(); 
-  }, [params]);
+    product = data;
+  } catch (error) {
+    console.error(`Error fetching product:`, error);
+    return notFound();
+  }
 
   return (
-    <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
-      <main className="mx-auto font-sans mt-[10rem] text-[#2D2D2D] text-[clamp(.8rem,1.4vw,.9rem)]">
-        {loading || !product ? (
-          <DetailHeroSkeleton />
-        ) : (
-          <DetailHero product={product} seller={SELLER_DATA} />
-        )}
-        <Faq />
-        <ResourcesAndSupport />
-        <div className="py-[4rem]">
-          <Footer />
-        </div>
-      </main>
-    </Suspense>
+    <main className="mx-auto font-sans mt-[10rem] text-[#2D2D2D] text-[clamp(.8rem,1.4vw,.9rem)]">
+      {product ? (
+        <DetailHero product={product} seller={SELLER_DATA} />
+      ) : (
+        <div className="text-center py-10">Product not found</div>
+      )}
+      <Faq />
+      <ResourcesAndSupport />
+      <div className="py-[4rem]">
+        <Footer />
+      </div>
+    </main>
   );
 }
+
+// Optional: Explicitly allow dynamic params
+export const dynamicParams = true; // Allow dynamic rendering for non-pre-generated IDs
+// export const revalidate = 60; // Revalidate all static pages every 60 seconds

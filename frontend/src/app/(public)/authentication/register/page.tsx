@@ -2,10 +2,11 @@
 import FourRoleSelection from "./components/RoleSelection";
 import SignUpForm from "./components/SignupFom";
 import { useState } from "react";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Register() {
-  const [showSignupForm, setShowSignupForm] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("");
+  const { selectedRole, setSelectedRole, showSignupForm, setShowSignupForm } =
+    useAuth();
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);

@@ -28,12 +28,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-poppins font-light text-[#464646]`}
       >
-        <CartProvider>
+        {/* <CartProvider> */}
           <Navbar />
           <div className="px-[.5rem] tablet-lg:px-[2rem] laptop-lg:px-[4rem]">
             {children}
           </div>
-        </CartProvider>
+        {/* </CartProvider> */}
       </body>
     </html>
   );

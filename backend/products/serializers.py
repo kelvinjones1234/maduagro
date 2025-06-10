@@ -35,7 +35,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "product_category",
             "category_details",
             "product_description",
-            "available_quantity", 
+            "available_quantity",
             "average_rating",
             "availability_status",
             "rating_count",
@@ -56,3 +56,16 @@ class ProductSerializer(serializers.ModelSerializer):
             ).data
         except RegularSellerProfile.DoesNotExist:
             return None
+
+
+class SellerProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = "__all__"
+        read_only_fields = [
+            "average_rating",
+            "rating_count",
+            "created_at",
+            "updated_at",
+            "seller",
+        ]

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface User {
@@ -11,6 +11,20 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  showLoginRole: boolean;
+  selectedRole: string;
+  associatedRole: string[];
+
+  setShowSignupForm: React.Dispatch<React.SetStateAction<boolean>>;
+  showSignupForm: boolean;
+
+  setFromCart: React.Dispatch<React.SetStateAction<boolean>>;
+  fromCart: boolean;
+
+  setShowLoginRole: React.Dispatch<React.SetStateAction<boolean>>;
+
+  setSelectedRole: React.Dispatch<React.SetStateAction<string>>;
+  setAssociatedRole: React.Dispatch<React.SetStateAction<string[]>>;
   login: (email: string, password: string) => Promise<boolean>;
   register: (
     email: string,
@@ -25,6 +39,18 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  selectedRole: "",
+  showLoginRole: false,
+  associatedRole: [],
+  showSignupForm: false,
+  setShowSignupForm: () => {},
+
+  fromCart: false,
+  setFromCart: () => {},
+
+  setShowLoginRole: () => {},
+  setSelectedRole: () => {},
+  setAssociatedRole: () => {},
   login: async () => false,
   register: async () => false,
   logout: () => {},
@@ -33,6 +59,11 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showLoginRole, setShowLoginRole] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
+  const [showSignupForm, setShowSignupForm] = useState(false);
+  const [fromCart, setFromCart] = useState(false);
+  const [associatedRole, setAssociatedRole] = useState<string[]>([]);
   const router = useRouter();
 
   // Check authentication on mount
@@ -96,7 +127,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (data.email && Array.isArray(data.profile_types)) {
         setUser(data);
         console.log("Associated profile types:", data.profile_types);
-        router.push("/dashboard/farmer");
+        setAssociatedRole(data.profile_types);
+        router.push("/authentication/login");
+        setShowLoginRole(true);
         return true;
       } else {
         console.error("Invalid login response data:", data);
@@ -134,6 +167,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       console.log("Register response status:", res.status);
+
       if (!res.ok) {
         const errorData = await res.text();
         console.error("Registration failed:", errorData);
@@ -142,14 +176,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const data = await res.json();
       console.log("Register response data:", data);
-      if (data.email && Array.isArray(data.profile_types)) {
-        setUser(data);
-        router.push("/dashboard/farmer");
-        return true;
-      } else {
-        console.error("Invalid register response data:", data);
-        return false;
+      console.log("User type:", user_type);
+
+      if (user_type === "regular buyer" && fromCart) {
+        router.push("/products/checkout");
       }
+      // Return true on successful registration
+      return true;
     } catch (error) {
       console.error("Registration error:", error);
       return false;
@@ -165,6 +198,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         credentials: "include",
       });
       console.log("Logout response status:", res.status);
+      setShowLoginRole(false);
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -209,6 +243,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  console.log("selected login role", selectedRole);
+
   // Periodically refresh token
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -226,7 +262,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        selectedRole,
+        showLoginRole,
+        associatedRole,
+        showSignupForm,
+        fromCart,
+        setFromCart,
+        setShowSignupForm,
+        setShowLoginRole,
+        setSelectedRole,
+        setAssociatedRole,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

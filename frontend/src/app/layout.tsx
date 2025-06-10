@@ -1,3 +1,4 @@
+import { CartProvider } from "./(public)/context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout({
@@ -8,7 +9,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <CartProvider>{children}</CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

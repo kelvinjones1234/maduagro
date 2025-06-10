@@ -11,6 +11,7 @@ interface Product {
   available: boolean;
   image: string;
   rating: number;
+  description?: string;
   [key: string]: any;
 }
 
@@ -27,7 +28,6 @@ export async function fetchCategories(): Promise<Category[]> {
   try {
     const res = await fetch(`${API_BASE_URL}/categories/`, {
       cache: "no-store",
-      // next: { revalidate: 60 * 60 * 24 },
     });
     if (!res.ok) {
       throw new Error("Failed to fetch categories");
@@ -49,13 +49,11 @@ export async function fetchProducts(searchParams: {
     Object.entries(searchParams).forEach(([key, value]) => {
       if (!value) return;
 
-      // Special handling for 'rating'
       if (key === "rating") {
         params.append("rating", value);
         return;
       }
 
-      // Generalized support for comma-separated multi-select values
       if (value.includes(",")) {
         const values = value.split(",");
         values.forEach((v) => params.append(key, v));
@@ -79,5 +77,61 @@ export async function fetchProducts(searchParams: {
   } catch (error) {
     console.error("Error fetching products:", error);
     return { results: [], count: 0 };
+  }
+}
+
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/products/`, {
+      next: { revalidate: 86400 }, // Revalidate daily to detect new products
+    });
+    if (!res.ok) {
+      console.error("Failed to fetch products:", res.status);
+      return [];
+    }
+
+    const data = await res.json();
+    const products: Product[] = Array.isArray(data)
+      ? data
+      : data.results || data.products || [];
+
+    return products.map((product) => ({
+      id: product.id.toString(),
+    }));
+  } catch (error) {
+    console.error("Error fetching products for static params:", error);
+    return [];
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  if (!id) {
+    return { title: "Product Not Found" };
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/products/${id}/`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return { title: "Product Not Found" };
+    }
+
+    const product: Product = await res.json();
+
+    return {
+      title: product.product_name || "Product Detail",
+      description: product.description || "View details of this product",
+    };
+  } catch (error) {
+    console.error(`Error fetching metadata for product ${id}:`, error);
+    return { title: "Product Not Found" };
   }
 }

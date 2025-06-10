@@ -28,7 +28,7 @@ type CartContextType = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   openCart: boolean;
   setOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
-};
+}; 
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -100,7 +100,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </CartContext.Provider>
-  );
+  ); 
 };
 
 export const useCart = () => {

@@ -18,7 +18,7 @@ interface Product {
   product_name: string;
   product_price: number;
   image: string;
-  available: boolean;
+  available_quantity: number;
   average_rating?: number;
   review_count?: number;
   product_category: ProductCategory;
@@ -59,9 +59,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <Link href={`/products/${product.id}`}>
         <div
           className={`relative aspect-square overflow-hidden group ${
-            product.available ? "cursor-pointer" : "opacity-90"
+            product.available_quantity < 1 ? "cursor-pointer" : "opacity-90"
           }`}
-          aria-disabled={!product.available}
+          aria-disabled={product.available_quantity < 0}
         >
           <Image
             src={product.image || "/placeholder.jpg"}
@@ -70,14 +70,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
             objectFit="cover"
             className="group-hover:scale-105 transition-transform duration-500"
           />
-          {!product.available && (
+          {product.available_quantity < 1 && (
             <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
               <span className="bg-red-600 text-white font-bold text-[.7rem] px-3 py-1 rounded-full shadow-lg">
                 OUT OF STOCK
               </span>
             </div>
           )}
-          {product.available && (
+          {product.available_quantity > 1 && (
             <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={(e) => {
@@ -97,7 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <span className="text-xs font-medium text-emerald-600 py-0.5 rounded-full">
-            {product.product_category.category_name}
+            {product.category_details.category_name}
           </span>
           <div className="tablet-lg:flex items-center hidden">
             <div className="flex">
@@ -187,15 +187,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 });
               }}
               className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg transition-colors ${
-                product.available
+                product.available_quantity > 0
                   ? "bg-amber-500 hover:bg-amber-600 text-white cursor-pointer"
                   : "bg-gray-200 text-gray-400 cursor-default"
               }`}
-              disabled={!product.available}
+              disabled={product.available_quantity < 1}
             >
               <ShoppingCart className="h-4 w-4" />
               <span className="font-medium">
-                {product.available ? "Add to Cart" : "Sold Out"}
+                {product.available_quantity > 0 ? "Add to Cart" : "Sold Out"}
               </span>
             </button>
           )}

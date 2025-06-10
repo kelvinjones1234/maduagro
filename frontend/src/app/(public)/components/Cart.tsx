@@ -2,9 +2,26 @@
 import { X, Trash2, ShoppingBag, ChevronRight, Info } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "@/app/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const CartDrawer = ({ openCart, setOpenCart }) => {
   const { removeFromCart, deleteProduct, addToCart, cart } = useCart();
+  const { user, setSelectedRole, setFromCart, setShowSignupForm } = useAuth();
+
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    if (user) {
+      router.push("/products/checkout");
+    } else {
+      setShowSignupForm(true);
+      setSelectedRole("regular buyer");
+      router.push("/authentication/register/");
+      setOpenCart(false);
+      setFromCart(true);
+    }
+  };
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -191,7 +208,7 @@ const CartDrawer = ({ openCart, setOpenCart }) => {
                   {subtotal >= freeShippingThreshold
                     ? "Free"
                     : "Calculated at checkout"}
-                </span>
+                </span> 
               </div>
               <div className="border-t pt-2 mt-2">
                 <div className="flex justify-between font-medium">
@@ -205,7 +222,10 @@ const CartDrawer = ({ openCart, setOpenCart }) => {
             </div>
 
             <div className="space-y-2">
-              <button className="w-full bg-amber-500 text-white py-3 rounded font-medium hover:bg-amber-600 transition focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+              <button
+                className="w-full bg-amber-500 text-white py-3 rounded font-medium hover:bg-amber-600 transition focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+                onClick={handleCheckout}
+              >
                 Proceed to Checkout
               </button>
               <button

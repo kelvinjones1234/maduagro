@@ -6,8 +6,7 @@ type Props = {
 };
 
 const FourRoleSelection = ({ onSelect }: Props) => {
-  const [selectedRole, setSelectedRole] = useState("");
-  const { register } = useAuth();
+  const { selectedRole, setSelectedRole } = useAuth();
 
   const roles = [
     {
@@ -89,7 +88,7 @@ const FourRoleSelection = ({ onSelect }: Props) => {
   return (
     <div className="min-h-screen flex flex-col text-[clamp(.9rem,4vw,1.3rem)] items-center bg-white p-4">
       <h1 className="font-semibold mb-8 text-center text-gray-800 text-2xl">
-        Join as a Seller or Buyer
+        Are you a Buyer or a Seller?
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl w-full">
@@ -140,13 +139,13 @@ const FourRoleSelection = ({ onSelect }: Props) => {
     }`}
       >
         {selectedRole
-          ? `Join as a ${selectedRole.replace(/-/g, " ")}`
+          ? `Become a ${selectedRole.replace(/-/g, " ")}`
           : `Create an account`}
       </button>
 
       <p className="mt-4 text-gray-600 text-[clamp(.7rem,4vw,1rem)]">
         Already have an account?{" "}
-        <a href="#" className="text-green-600 hover:underline">
+        <a href="login/" className="text-green-600 hover:underline">
           Log In
         </a>
       </p>

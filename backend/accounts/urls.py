@@ -10,7 +10,7 @@ from .views import (
     CookieTokenRefreshView,
     UserProfileView,
     LogoutView,
-)
+) 
 
 router = DefaultRouter()
 router.register(r"wholesaler", WholeSalerProfileViewSet)
