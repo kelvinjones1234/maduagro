@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     # applications
     "accounts",
     "products",
+    "orders",
+    "payments",
     # default applications
     "django.contrib.admin",
     "django.contrib.auth",
